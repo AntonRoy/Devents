@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<head>
+    <title>Courses recomendation</title>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+
+</head>
+<body>
+    <nav>
+        <div class="nav-wrapper">
+            <div class="brand-logo">&nbsp;&nbsp;&nbsp;Devent</div>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="/main">Sign in</a></li>
+                <li><a href="/sign_up">Sign up</a></li>
+            </ul>
+        </div>
+    </nav>
+    <form method="post">
+        <p>&shy;&nbsp;&nbsp;</p>
+        <div align="center">
+            <div class="input-field col s6">
+              &nbsp;<input id="login" type="text" class="validate">
+              <label for="login">Login</label>
+            </div>
+            <div class="input-field col s6">
+              &nbsp;<input id="Vk" type="text" class="validate">
+              <label for="Vk">VK</label>
+            </div>
+            <div class="input-field col s6">
+              &nbsp;<input id="password" type="password" class="validate">
+              <label for="password">Password</label>
+            </div>
+            <div class="input-field col s6">
+              &nbsp;<input id="repassword" type="password" class="validate">
+              <label for="repassword">Repeat password</label>
+            </div>
+        </div>
+        &nbsp;&nbsp;&nbsp;&nbsp;<input class="waves-effect waves-light btn" type="submit">
+    </form>
+<script>
+        $(document).ready(function() {
+            Materialize.updateTextFields();
+        });
+    </script>
+    <!--Import jQuery before materialize.js-->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<head xmlns="http://www.w3.org/1999/html">
+    <title>Courses recomendation</title>
+
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="materialize/css/materialize.min.css"  media="screen,projection"/>
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+</head>
+<body>
+    <nav>
+        <div class="nav-wrapper">
+            <div class="brand-logo">&nbsp;&nbsp;&nbsp;Devent</div>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="/prfile" class="top">Profile</a></li>
+                <li><a href="/new_room" class="top">Sign up room</a></li>
+                <li><a href="/main">Log out</a></li>
+            </ul>
+        </div>
+    </nav>
+     <div class="row">
+        <div class="col s12 m7">
+          <div class="card">
+            <div class="card-image">
+              <img src="iZrb3rrnItE.jpg">
+            </div>
+            <div class="card-content">
+              <h3>{{name}}&nbsp;{{lastname}}</h3>
+            </div>
+            <div class="card-action">
+              <a href="/edit_profile">Edit profile</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    <table style="width:100%">
+      <tr>
+        <th>
+            <div class="row">
+                <div class="col s12 m6">
+                  <div class="card blue-grey whiten-1">
+                    <div class="card-content white-text">
+                      <span class="card-title">Events</span>
+                    </div>
+                    <div class="card-action">
+                      {%for event in events%}
+                        <span>{{event}}</span>
+                      {%endfor%}
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </th>
+        <th>
+            <div class="row">
+                <div class="col s12 m6">
+                  <div class="card blue-grey whiten-10">
+                    <div class="card-content white-text">
+                      <span class="card-title">Groups</span>
+                    </div>
+                    <div class="card-action">
+                      {%for group in groups%}
+                        <span>{{group}}</span>
+                      {%endfor%}
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </th>
+      </tr>
+    </table>
+    <script>
+        $(".dropdown-button").dropdown();
+    </script>
+</body>
+</html>
