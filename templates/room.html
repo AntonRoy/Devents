@@ -1,20 +1,9 @@
 <!DOCTYPE html>
-<head xmlns="http://www.w3.org/1999/html">
+<head>
     <title>Courses recomendation</title>
-
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
 
-    <!-- Compiled and minified JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
-    <!--Import Google Icon Font-->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!--Import materialize.css-->
-    <link type="text/css" rel="stylesheet" href="materialize/css/materialize.min.css"  media="screen,projection"/>
-    <!--Let browser know website is optimized for mobile-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 </head>
 <body>
     <nav>
@@ -27,59 +16,44 @@
             </ul>
         </div>
     </nav>
-     <div class="row">
-        <div class="col s12 m7">
-          <div class="card">
-            <div class="card-image">
-              <img src="iZrb3rrnItE.jpg">
+    <form method="post">
+        <p>&shy;&nbsp;&nbsp;</p>
+        <div align="center">
+            <div class="input-field col s6">
+              &nbsp;<input id="login" type="text" class="validate">
+              <label for="login">Login</label>
             </div>
-            <div class="card-content">
-              <h3>{{name}}&nbsp;{{lastname}}</h3>
+            <div class="file-field input-field">
+                <div class="btn">
+                    <span>Upload photo</span>
+                    <input type="file" name="photo">
+                </div>
+                <div class="file-path-wrapper">
+                    <input class="file-path validate" type="text">
+                </div>
             </div>
-            <div class="card-action">
-              <a href="/edit_profile">Edit profile</a>
+            <div class="input-field col s6">
+              &nbsp;<input id="Vk" type="text" class="validate">
+              <label for="Vk">VK</label>
             </div>
-          </div>
+            <div class="input-field col s6">
+              &nbsp;<input id="password" type="password" class="validate">
+              <label for="password">Password</label>
+            </div>
+            <div class="input-field col s6">
+              &nbsp;<input id="repassword" type="password" class="validate">
+              <label for="repassword">Repeat password</label>
+            </div>
         </div>
-      </div>
-    <table style="width:100%">
-      <tr>
-        <th>
-            <div class="row">
-                <div class="col s12 m6">
-                  <div class="card blue-grey whiten-1">
-                    <div class="card-content white-text">
-                      <span class="card-title">Events</span>
-                    </div>
-                    <div class="card-action">
-                      {%for event in events%}
-                        <span>{{event}}</span>
-                      {%endfor%}
-                    </div>
-                  </div>
-                </div>
-            </div>
-        </th>
-        <th>
-            <div class="row">
-                <div class="col s12 m6">
-                  <div class="card blue-grey whiten-10">
-                    <div class="card-content white-text">
-                      <span class="card-title">Groups</span>
-                    </div>
-                    <div class="card-action">
-                      {%for group in groups%}
-                        <span>{{group}}</span>
-                      {%endfor%}
-                    </div>
-                  </div>
-                </div>
-            </div>
-        </th>
-      </tr>
-    </table>
-    <script>
-        $(".dropdown-button").dropdown();
+        &nbsp;&nbsp;&nbsp;&nbsp;<input class="waves-effect waves-light btn" type="submit">
+    </form>
+<script>
+        $(document).ready(function() {
+            Materialize.updateTextFields();
+        });
     </script>
+    <!--Import jQuery before materialize.js-->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
 </body>
 </html>
