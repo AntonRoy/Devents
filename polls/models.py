@@ -28,7 +28,7 @@ class Event(models.Model):
     name = models.CharField(max_length=100)
     cmt = models.TextField(default="Cool Event", blank=True)
     img = models.ImageField(default="event_default.png", blank=True)
-    room = models.ForeignKey(Room)
+    room = models.ForeignKey(Room, related_name='events')
     users = models.ManyToManyField(Person, blank=True, related_name='events')
     def __str__(self):
         return self.name

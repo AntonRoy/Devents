@@ -40,12 +40,17 @@ def sign_up(request):
 
 def profile(request):
     return render(request, 'profile.html',
-                  {'name': request.user.first_name, 'lastname': request.user.last_name,
+                  {'ID': request.user.person.id ,'name': request.user.first_name, 'lastname': request.user.last_name,
                    'events': list(request.user.person.events.all()), 'groups': list(request.user.person.agroups.all()) + list(request.user.person.ugroups.all())})
 
 
+def sign_up_room(request):
+    if request.method = 'POST':
+        name = request.POST['name']
+
+
 def room(request, room_id):
-    if request.method == 'GET':
-        # data =
-        return render(request, "room.htl", {''})
-    return render(request, "room.html", {'members': list(room.users.all()) + list(room.admins.all()), 'events': room.events})
+    if request.method == "GET":
+        #code.interact(local=locals())
+        room = Room.objects.get(id=room_id)
+        return render(request, "room.html", {'room_name': room.name,'members': list(room.users.all()) + list(room.admins.all()), 'events': list(room.events.all())})
