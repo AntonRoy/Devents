@@ -22,7 +22,7 @@
               <img src="{{image_path}}">
             </div>
             <div class="card-content">
-              <h3>{{Rome name}}</h3>
+              <h3>{{room_name}}</h3>
             </div>
             <div class="card-action">
               <a href="/edit_room">Edit room</a>
@@ -53,11 +53,11 @@
                 <div class="col s12 m6">
                   <div class="card blue-grey whiten-10">
                     <div class="card-content white-text">
-                      <span class="card-title">Groups</span>
+                      <span class="card-title">Members</span>
                     </div>
                     <div class="collection">
                         {% for member in members%}
-                            <a href="room/{{member.id}}" class="collection-item">{{member}}</a>
+                            <a class="collection-item">{{member}}</a>
                         {% endfor %}
                       </div>
                   </div>

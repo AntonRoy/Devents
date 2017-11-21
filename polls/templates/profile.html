@@ -9,8 +9,8 @@
         <div class="nav-wrapper">
             <div class="brand-logo">&nbsp;&nbsp;&nbsp;Devent</div>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a href="/prfile" class="top">Profile</a></li>
-                <li><a href="/new_room" class="top">Sign up room</a></li>
+                <li><a href="accounts/profile" class="top">Profile</a></li>
+                <li><a href="sign_up_room" class="top">Sign up room</a></li>
                 <li><a href="/main">Log out</a></li>
             </ul>
         </div>
@@ -23,6 +23,7 @@
             </div>
             <div class="card-content">
               <h3>{{name}}&nbsp;{{lastname}}</h3>
+                <h5> Your id - {{ID}}</h5>
             </div>
             <div class="card-action">
               <a href="/edit_profile">Edit profile</a>
@@ -57,7 +58,7 @@
                     </div>
                     <div class="collection">
                         {% for group in groups%}
-                            <a href="room/?={{group.id}}" class="collection-item">{{group}}</a>
+                            <a href="{{group.id}}" class="collection-item">{{group}}</a>
                         {% endfor %}
                       </div>
                   </div>
