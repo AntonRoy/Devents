@@ -45,9 +45,18 @@ def profile(request):
 
 
 def sign_up_room(request):
-    if request.method = 'POST':
-        name = request.POST['name']
-
+    if request.method == 'POST':
+        name = request.POST['room_name']
+        cmt = request.POST['discription']
+        if request.form.method =='POST':
+            user_ids = request.form["members"]
+            users = []
+            for id in user_ids:
+                user = User.objects(id=id)
+                if user:
+                    users += user
+            Room.objects.get_or_create(name=name, cmt=cmt, users=users)
+    return render(request, 'sign_up_room.html')
 
 def room(request, room_id):
     if request.method == "GET":
