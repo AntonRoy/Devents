@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<head xmlns="http://www.w3.org/1999/html">
+    <title>D&E</title>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-wrapper">
+            <div class="brand-logo">&nbsp;&nbsp;&nbsp;Devent</div>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="/prfile" class="top">Profile</a></li>
+                <li><a href="/new_room" class="top">Sign up room</a></li>
+                <li><a href="/main">Log out</a></li>
+            </ul>
+        </div>
+    </nav>
+     <div class="row">
+        <div class="col s12 m7">
+          <div class="card">
+            <div class="card-image">
+              <img src="{{image_path}}">
+            </div>
+            <div class="card-content">
+              <h3>{{event_name}}</h3>
+                <label>{{ discription }}</label>
+            </div>
+            <div class="card-action">
+                {% if admin == 1 %}
+                    <a href="/edit_room">Edit event</a>
+                {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    <div class="row">
+        <div class="col s12 m7">
+          <div class="card">
+            <div class="card-content">
+              <p><font color="#696969" size="5">{{ time }}</font></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    <table>
+      <tr>
+        <th>
+            <div class="row">
+                <div class="col s20 m7">
+                  <div class="card blue-grey whiten-10">
+                    <div class="card-content white-text">
+                      <span class="card-title">Members</span>
+                    </div>
+                    <div class="collection">
+                        {% for member in members%}
+                            <a class="collection-item">{{member}}</a>
+                        {% endfor %}
+                      </div>
+                  </div>
+                </div>
+            </div>
+        </th>
+      </tr>
+    </table>
+    <script>
+        $(".dropdown-button").dropdown();
+    </script>
+<!--Import jQuery before materialize.js-->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+</body>
+</html>
