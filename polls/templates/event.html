@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <head xmlns="http://www.w3.org/1999/html">
     <title>D&E</title>
@@ -9,13 +10,14 @@
         <div class="nav-wrapper">
             <div class="brand-logo">&nbsp;&nbsp;&nbsp;Devent</div>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a href="/prfile" class="top">Profile</a></li>
-                <li><a href="/new_room" class="top">Sign up room</a></li>
-                <li><a href="/main">Log out</a></li>
+                <li><a href="profile" class="top">Profile</a></li>
+                <li><a href="sign_up_room" class="top">Sign up room</a></li>
+                <li><a href="main">Log out</a></li>
             </ul>
         </div>
     </nav>
      <div class="row">
+         {% csrf_token %}
         <div class="col s12 m7">
           <div class="card">
             <div class="card-image">

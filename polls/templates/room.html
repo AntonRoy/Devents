@@ -9,9 +9,9 @@
         <div class="nav-wrapper">
             <div class="brand-logo">&nbsp;&nbsp;&nbsp;Devent</div>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a href="/prfile" class="top">Profile</a></li>
-                <li><a href="/new_room" class="top">Sign up room</a></li>
-                <li><a href="/main">Log out</a></li>
+                <li><a href="profile" class="top">Profile</a></li>
+                <li><a href="sign_up_room" class="top">Sign up room</a></li>
+                <li><a href="main">Log out</a></li>
             </ul>
         </div>
     </nav>
@@ -41,7 +41,7 @@
                     </div>
                      <div class="collection">
                         {% for event in events%}
-                            <a href="event/{{event.id}}" class="collection-item">{{event}}</a>
+                            <a href="/accounts/profile/event/{{event.id}}" class="collection-item">{{event}}</a>
                         {% endfor %}
                       </div>
                   </div>
