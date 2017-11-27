@@ -46,20 +46,30 @@ def profile(request):
 
 def sign_up_room(request):
     if request.method == 'POST':
+        data = request.POST
+        #code.interact(local=locals())
         name = request.POST['room_name']
         cmt = request.POST['discription']
-        if request.form.method =='POST':
-            user_ids = request.form["members"]
-            users = []
-            for id in user_ids:
-                user = User.objects(id=id)
-                if user:
-                    users += user
-            Room.objects.get_or_create(name=name, cmt=cmt, users=users)
+        user_ids = request.POST['members']
+        users = []
+        for id in user_ids:
+            user = User.objects(id=id)
+            if user:
+                users += user
+        Room.objects.get_or_create(name=name, cmt=cmt, users=users)
     return render(request, 'sign_up_room.html')
 
 def room(request, room_id):
     if request.method == "GET":
         #code.interact(local=locals())
         room = Room.objects.get(id=room_id)
+        admin = 0
+        # if request.user.id in room.admins:
+        #     admin=1
         return render(request, "room.html", {'room_name': room.name,'members': list(room.users.all()) + list(room.admins.all()), 'events': list(room.events.all())})
+
+def event(request, event_id):
+    if request.method == "GET":
+        event = Event.objects.get(id=event_id)
+        admin = 1
+        return render(request, 'event.html', {'admin': admin, 'event_name': event.name, 'members': list(event.users.all()), 'time': event.date, 'discription': event.cmt})

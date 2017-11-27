@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.contrib import admin
+from datetime import datetime
 
 
 class Person(models.Model):
@@ -30,6 +31,8 @@ class Event(models.Model):
     img = models.ImageField(default="event_default.png", blank=True)
     room = models.ForeignKey(Room, related_name='events')
     users = models.ManyToManyField(Person, blank=True, related_name='events')
+    date = models.DateTimeField(auto_now=False, auto_now_add=False, default=datetime.now)
+    obligation = models.BooleanField(default=False, blank=True)
     def __str__(self):
         return self.name
 
