@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head xmlns="http://www.w3.org/1999/html">
-    <title>Courses recomendation</title>
+    <title>D&E</title>
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
 </head>
@@ -42,7 +42,7 @@
                     </div>
                      <div class="collection">
                         {% for event in events%}
-                            <a href="/accounts/profile/event/{{event.id}}" class="collection-item">{{event}}</a>
+                            <a href="event/{{event.id}}" class="collection-item">{{event}}</a>
                         {% endfor %}
                       </div>
                   </div>
@@ -58,7 +58,7 @@
                     </div>
                     <div class="collection">
                         {% for group in groups%}
-                            <a href="/accounts/profile/room/{{group.id}}" class="collection-item">{{group}}</a>
+                            <a href="{{group.id}}" class="collection-item">{{group}}</a>
                         {% endfor %}
                       </div>
                   </div>
