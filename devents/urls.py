@@ -19,12 +19,12 @@ from django.contrib.auth.views import login
 from polls.views import *
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^main/', login, {'template_name': 'main.html'}, name="main"),
     url(r'^sign_up/', sign_up, name="sign_up"),
-    url(r'^accounts/profile/room/(?P<room_id>[0-9]{1})', room, name='room'),
-    url(r'^accounts/profile/event/(?P<event_id>[0-9]{1})', event, name='event'),
-    url(r'^accounts/profile/sign_up_room', sign_up_room, name='sign_up_room'),
-    url(r'^accounts/profile/', profile, name="profile"),
-
+    url(r'^admin/', admin.site.urls),
+    url(r'^accounts/profile', profile, name="profile"),
+    url(r'^accounts/room/(?P<room_id>[0-9]{1})', room, name='room'),
+    url(r'^accounts/room/sign_up_event/(?P<room_id>[0-9]{1})', sign_up_event, name='sign_up_event'),
+    url(r'^accounts/event/(?P<event_id>[0-9]{1})', event, name='event'),
+    url(r'^accounts/sign_up_room', sign_up_room, name='sign_up_room'),
+    url(r'^main/', login, {'template_name': 'main.html'}, name="main"),
 ]
