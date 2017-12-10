@@ -32,7 +32,6 @@ class Event(models.Model):
     room = models.ForeignKey(Room, related_name='events')
     users = models.ManyToManyField(Person, blank=True, related_name='events')
     date = models.DateTimeField(auto_now=False, auto_now_add=False, default=datetime.now)
-    obligation = models.BooleanField(default=False, blank=True)
     def __str__(self):
         return self.name
 
