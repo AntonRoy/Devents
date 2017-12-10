@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head xmlns="http://www.w3.org/1999/html">
-    <title>D&E</title>
+    <title>Devents</title>
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
 </head>
@@ -9,8 +9,8 @@
         <div class="nav-wrapper">
             <div class="brand-logo">&nbsp;&nbsp;&nbsp;Devent</div>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a href="/prfile" class="top">Profile</a></li>
-                <li><a href="/new_room" class="top">Sign up room</a></li>
+                <li><a href="/accounts/profile" class="top">Profile</a></li>
+                <li><a href="/accounts/sign_up_room" class="top">Sign up room</a></li>
                 <li><a href="/main">Log out</a></li>
             </ul>
         </div>
@@ -41,14 +41,15 @@
                     </div>
                      <div class="collection">
                         {% for event in events%}
-                            <a href="event/{{event.id}}" class="collection-item">{{event}}</a>
+                            <a href="/accounts/event/{{event.id}}" class="collection-item">{{event}}</a>
                         {% endfor %}
+                         <a href="/accounts/room/sign_up_event/{{room_id}}" class="collection-item">Create event</a>
                       </div>
                   </div>
                 </div>
             </div>
         </th>
-        <th>1
+        <th>
             <div class="row">
                 <div class="col s12 m6">
                   <div class="card blue-grey whiten-10">
@@ -60,8 +61,9 @@
                             <a class="collection-item">{{member}}</a>
                         {% endfor %}
                         <form method="post">
-                            <input class="collection-item">
-                            <button type="submit" class="collection-item">Add</button>
+                            {% csrf_token %}
+                            <input name="id_" class="collection-item">
+                            <button type="submit" class="collection-item">Add</button> <font color="white">{{error}}</font>
                         </form>
                       </div>
                   </div>
