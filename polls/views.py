@@ -43,6 +43,27 @@ def profile(request):
                   {'ID': request.user.person.id ,'name': request.user.first_name, 'lastname': request.user.last_name,
                    'events': list(request.user.person.events.all()), 'groups': list(request.user.person.agroups.all()) + list(request.user.person.ugroups.all())})
 
+def edit_user(request):
+    name = request.user.username
+    # code.interact(local=locals())
+    user = User.objects.get(username=name)
+    if request.method=="POST":
+        if request.POST['name'] is not None:
+            user.first_name = request.POST['name']
+        if request.POST['lastname'] is not None:
+            user.last_name = request.POST['lastname']
+        # code.interact(local=locals())
+        '''
+        if request.POST['password'] is not None and request.POST['repassword'] is not None:
+            if request.POST['password']==request.POST['repassword']:
+                user.set_password(request.POST['password'])
+            else:
+                return render(request, 'edit_user.html', {'error': 'Пароли не совпадают'})
+        '''
+
+        user.save()
+        return redirect('/main')
+    return render(request, 'edit_user.html')
 
 def sign_up_room(request):
     if request.method == 'POST':
@@ -69,11 +90,13 @@ def room(request, room_id):
     if request.method == "GET":
         #code.interact(local=locals())
         room = Room.objects.get(id=room_id)
-        admin = 1
-        # if request.user.id in room.admins:
-        #     admin=1
+        admin = 0
+        if request.user.person in room.admins.all():
+            admin=1
         return render(request, "room.html", {'error': "",'room_id': room_id, 'room_name': room.name,
-                                             'members': list(room.users.all()) + list(room.admins.all()),
+                                             'members': list(room.users.all()),
+                                             'admins': list(room.admins.all()),
+                                             'admin': admin,
                                              'events': list(room.events.all())})
     if request.method=="POST":
         id_ = request.POST["id_"]
@@ -81,18 +104,38 @@ def room(request, room_id):
         admin = 1
         try:
             user = Person.objects.get(id=id_)
+            if user in list(room.users.all()):
+                return render(request, "room.html",
+                              {'error': "This user is in room", 'room_id': room_id, 'room_name': room.name,
+                               'members': list(room.users.all()),
+                               'admins': list(room.admins.all()),
+                               'admin': admin,
+                               'events': list(room.events.all())})
             users = list(room.users.all()) + [user]
             room.users = users
             room.save()
             return render(request, "room.html", {'error': "", 'room_id': room_id, 'room_name': room.name,
-                                                 'members': list(room.users.all()) + list(room.admins.all()),
+                                                 'members': list(room.users.all()),
+                                                 'admins': list(room.admins.all()),
+                                                 'admin': admin,
                                                  'events': list(room.events.all())})
         except:
             return render(request, "room.html", {'error': "This user doesn't exist", 'room_id': room_id, 'room_name': room.name,
-                                                 'members': list(room.users.all()) + list(room.admins.all()),
+                                                 'members': list(room.users.all()),
+                                                 'admins': list(room.admins.all()),
+                                                 'admin': admin,
                                                  'events': list(room.events.all())})
 
-
+def edit_room(request, room_id):
+    room = Room.objects.get(id=room_id)
+    if request.method == 'POST':
+        if request.POST['room_name'] is not None:
+            room.name = request.POST['room_name']
+        if request.POST['discription'] is not None:
+            room.cmt = request.POST['discription']
+        room.save()
+        return redirect ('/accounts/room/{0}'.format(room_id))
+    return render (request, 'edit_room.html')
 
 def sign_up_event(request, room_id):
     if request.method == 'POST':
@@ -110,9 +153,13 @@ def sign_up_event(request, room_id):
                 if int(day[1])<10:
                     day[1]='0'+day[1]
         date = str(day[2]+'-'+day[1]+'-'+day[0]+' '+request.POST['time'])
+        room = Room.objects.get(id=room_id)
+        users = room.users
 
-
-        Event.objects.get_or_create(name=name, cmt=cmt, date=date, room=Room.objects.get(id=room_id))
+        Event.objects.get_or_create(name=name, cmt=cmt, date=date, room=room)
+        event = Event.objects.get(name=name)
+        event.users=list(room.users.all())+list(room.admins.all())
+        event.save()
         return redirect("/accounts/room/{0}".format(room_id))
     return render(request, 'sign_up_event.html')
 
@@ -121,3 +168,4 @@ def event(request, event_id):
         event = Event.objects.get(id=event_id)
         admin = 1
         return render(request, 'event.html', {'admin': admin, 'event_name': event.name, 'members': list(event.users.all()), 'time': event.date, 'discription': event.cmt})
+
