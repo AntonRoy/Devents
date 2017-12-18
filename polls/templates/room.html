@@ -25,7 +25,7 @@
               <h3>{{ room_name }}</h3>
             </div>
             <div class="card-action">
-              <a href="/edit_room">Edit room</a>
+              <a href="/accounts/edit_room/{{room_id}}">Edit room</a>
             </div>
           </div>
         </div>
@@ -41,7 +41,7 @@
                     </div>
                      <div class="collection">
                         {% for event in events%}
-                            <a href="/accounts/event/{{event.id}}" class="collection-item">{{event}}</a>
+                            <a href="/accounts/event/{{event.id}}" class="collection-item">{{event}} {{event.date}} {{event.time}}</a>
                         {% endfor %}
                          <a href="/accounts/room/sign_up_event/{{room_id}}" class="collection-item">Create event</a>
                       </div>
@@ -65,6 +65,22 @@
                             <input name="id_" class="collection-item">
                             <button type="submit" class="collection-item">Add</button> <font color="white">{{error}}</font>
                         </form>
+                      </div>
+                  </div>
+                </div>
+            </div>
+        </th>
+          <th>
+            <div class="row">
+                <div class="col s12 m6">
+                  <div class="card blue-grey whiten-10">
+                    <div class="card-content white-text">
+                      <span class="card-title">Admins</span>
+                    </div>
+                    <div class="collection">
+                        {% for admin in admins%}
+                            <a class="collection-item">{{admin}}</a>
+                        {% endfor %}
                       </div>
                   </div>
                 </div>
