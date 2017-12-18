@@ -48,21 +48,20 @@ def edit_user(request):
     # code.interact(local=locals())
     user = User.objects.get(username=name)
     if request.method=="POST":
-        if request.POST['name'] is not None:
-            user.first_name = request.POST['name']
-        if request.POST['lastname'] is not None:
-            user.last_name = request.POST['lastname']
+        user.first_name = request.POST['name']
+        user.last_name = request.POST['lastname']
         # code.interact(local=locals())
-        '''
-        if request.POST['password'] is not None and request.POST['repassword'] is not None:
+
+        if request.POST['password'] != '' and request.POST['repassword'] != '':
             if request.POST['password']==request.POST['repassword']:
                 user.set_password(request.POST['password'])
             else:
                 return render(request, 'edit_user.html', {'error': 'Пароли не совпадают'})
-        '''
+
 
         user.save()
         return redirect('/main')
+    user = request.user
     return render(request, 'edit_user.html')
 
 def sign_up_room(request):
@@ -97,7 +96,8 @@ def room(request, room_id):
                                              'members': list(room.users.all()),
                                              'admins': list(room.admins.all()),
                                              'admin': admin,
-                                             'events': list(room.events.all())})
+                                             'events': list(room.events.all()),
+                                             'discription': room.cmt})
     if request.method=="POST":
         id_ = request.POST["id_"]
         room = Room.objects.get(id=room_id)
@@ -129,13 +129,11 @@ def room(request, room_id):
 def edit_room(request, room_id):
     room = Room.objects.get(id=room_id)
     if request.method == 'POST':
-        if request.POST['room_name'] is not None:
-            room.name = request.POST['room_name']
-        if request.POST['discription'] is not None:
-            room.cmt = request.POST['discription']
+        room.name = request.POST['room_name']
+        room.cmt = request.POST['discription']
         room.save()
         return redirect ('/accounts/room/{0}'.format(room_id))
-    return render (request, 'edit_room.html')
+    return render (request, 'edit_room.html', {'room': room})
 
 def sign_up_event(request, room_id):
     if request.method == 'POST':
