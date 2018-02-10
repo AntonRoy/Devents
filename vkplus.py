@@ -7,9 +7,9 @@ def captcha_handler(captcha):
 
 class VkPlus:
     api = None
-
-
     def __init__(self, token):
+        #self.api = vk_api.VkApi(token=token, captcha_handler=captcha_handler)
+        #self.api.auth()
         try:
             self.api = vk_api.VkApi(token=token, captcha_handler=captcha_handler)
             self.api.authorization()
