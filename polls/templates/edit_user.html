@@ -1,51 +1,157 @@
 <!DOCTYPE html>
 <head>
     <title>Devents</title>
+    <meta charset="UTF-81">
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
-
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-    <nav>
+    <nav class="#1565c0 blue darken-2">
         <div class="nav-wrapper">
             <div class="brand-logo">&nbsp;&nbsp;&nbsp;Devent</div>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a href="/accounts/profile" class="top">Profile</a></li>
-                <li><a href="/main">Sign in</a></li>
-                <li><a href="/sign_up">Sign up</a></li>
+                <li><a href="/accounts/profile" class="top">Профиль</a></li>
+                <li><a href="/accounts/sign_up_room" class="top">Создать комнату</a></li>
+                <li><a href="/login">Выйти</a></li>
             </ul>
         </div>
     </nav>
     <form method="post">
         {% csrf_token %}
-        <p>&shy;&nbsp;&nbsp;</p>
-        <div align="center">
-            <div class="input-field col s6">
-              &nbsp;<input id="name" name="name" type="text" value="{{user.first_name}}" class="validate">
-              <label for="name">Name</label>
+    <div class="row">
+        <div class="col s12 m1000">
+          <div class="card">
+            <div class="card-image">
             </div>
-            <div class="input-field col s6">
-              &nbsp;<input id="lastname" name="lastname" type="text" value="{{user.last_name}}" class="validate">
-              <label for="lastname">Last name</label>
+            <div class="card-content">
+                <div class="row">
+                    <div class="input-field col s6">
+                      &nbsp;<input id="first_name" name="first_name" type="text" class="validate" value="{{user.first_name}}">
+                        <label for="first_name">Имя</label>
+                    </div>
+                    <div class="input-field col s6">
+                      &nbsp;<input id="last_name" name="last_name" type="text" class="validate" value="{{user.last_name}}">
+                      <label for="last_name">Фамилия</label>
+                    </div>
+                </div>
+                &nbsp;
+                <a href="/accounts/profile"><font size="4">#id{{user.person.id}}</font></a>
             </div>
-            <div class="input-field col s6">
-              &nbsp;<input id="password" name="password" type="password" class="validate">
-              <label for="password">Password</label>
-            </div>
-            <div class="input-field col s6">
-              &nbsp;<input id="repassword" name="repassword" type="password" class="validate">
-              <label for="repassword">Repeat password</label>
-            </div>
+          </div>
         </div>
-        &nbsp;&nbsp;&nbsp;&nbsp;<input class="waves-effect waves-light btn" type="submit">
-        <h4><font color="red">{{error}}</font></h4>
+      </div>
+        <div class="row">
+        <div class="col s12 m1000">
+          <div class="card">
+            <div class="card-image">
+            </div>
+            <div class="card-content">
+                    <div class="row">
+                        <div class="input-field col s6">
+                          &nbsp;<input id="password" name="password" type="password" class="validate">
+                          <label for="password">Новый пароль</label>
+                        </div>
+                        <div class="input-field col s6">
+                          &nbsp;<input id="repassword" name="repassword" type="password" class="validate">
+                          <label for="repassword">Повторите новый пароль</label>
+                        </div>
+                    </div>
+            </div>
+          </div>
+        </div>
+      </div>
+        <h4>{{error}}</h4>
+    <div class="card">
+    <div class="card-tabs">
+      <ul class="tabs tabs-fixed-width">
+        <li class="tab"><a class="active" href="#tasks">Задачи</a></li>
+        <li class="tab"><a href="#events">Мероприятия</a></li>
+        <li class="tab"><a href="#groups"><i class="material-icons center">group</i></a></li>
+      </ul>
+    </div>
+    <div class="card-content grey lighten-4">
+      <div id="events">
+          <ul class="collapsible" data-collapsible="accordion">
+            {% for event in events%}
+                <li>
+                    <div class="collapsible-header">
+                        <a>
+                            {{event}}#id{{event.id}}
+                            <br>
+                            <i class="material-icons">alarm</i>{{event.date}}
+                        </a>
+                    </div>
+                    <div class="collapsible-body">
+                        <span>{{ event.cmt }}</span>
+                        <br>
+                        <a href="/accounts/event/{{event.id}}">Подробнее>></a>
+                    </div>
+                </li>
+            {% endfor %}
+          </ul>
+      </div>
+      <div id="tasks">
+          <ul class="collapsible" data-collapsible="accordion">
+            {% for task in tasks%}
+                <li>
+                    <div class="collapsible-header">
+                        <a>
+                            {{task}}#id{{task.id}}
+                            <br>
+                            <i class="material-icons">alarm</i>{{task.date}}
+                        </a>
+                    </div>
+                    <div class="collapsible-body">
+                        <span>{{ task.cmt }}</span>
+                        <br>
+                        <a href="/accounts/task/{{task.id}}">Подробнее>></a>
+                    </div>
+                </li>
+            {% endfor %}
+          </ul>
+      </div>
+      <div id="groups">
+          <ul class="collapsible" data-collapsible="accordion">
+            {% for group in groups%}
+                <li class="collection-item">
+                    <div class="collapsible-header">
+                        <a>{{group}}</a>
+                        <i class="material-icons red logout-from">clear</i>
+                    </div>
+                    <div class="collapsible-body">
+                        <span>{{group.cmt}}</span>
+                        <br><br>
+                        <a href="/accounts/room/{{group.id}}/">Перейти в комнату>></a>
+                    </div>
+                </li>
+            {% endfor %}
+          </ul>
+      </div>
+    </div>
+  </div>
+        <div class="row">
+        <div class="col s12 m1000">
+          <div class="card">
+            <div class="card-image">
+            </div>
+            <div class="card-content">
+                <button class="btn green" type="submit">Сохранить изменения</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </form>
-<script>
-        $(document).ready(function() {
-            Materialize.updateTextFields();
-        });
+    <script>
+        $(".dropdown-button").dropdown();
     </script>
-    <!--Import jQuery before materialize.js-->
+    <script>
+        $(".logout-from").on("click", function(){
+            var $this=$(this)
+
+    </script>
+<!--Import jQuery before materialize.js-->
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
 </body>
+</html>

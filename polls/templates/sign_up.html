@@ -6,11 +6,11 @@
 
 </head>
 <body>
-    <nav>
+    <nav class="#1976d2 blue darken-2">
         <div class="nav-wrapper">
             <div class="brand-logo">&nbsp;&nbsp;&nbsp;Devent</div>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a href="/main">Sign in</a></li>
+                <li><a href="/login">Sign in</a></li>
                 <li><a href="/sign_up">Sign up</a></li>
             </ul>
         </div>
@@ -19,32 +19,40 @@
         {% csrf_token %}
         <p>&shy;&nbsp;&nbsp;</p>
         <div align="center">
-            <div class="input-field col s6">
-              &nbsp;<input id="name" name="name" type="text" class="validate">
-              <label for="name">Name</label>
-            </div>
-            <div class="input-field col s6">
-              &nbsp;<input id="lastname" name="lastname" type="text" class="validate">
-              <label for="lastname">Last name</label>
+            <div class="row">
+                <div class="input-field col s6">
+                  &nbsp;<input id="name" name="name" type="text" class="validate">
+                  <label for="name">Имя</label>
+                </div>
+                <div class="input-field col s6">
+                  &nbsp;<input id="lastname" name="lastname" type="text" class="validate">
+                  <label for="lastname">Фамилия</label>
+                </div>
             </div>
             <div class="input-field col s6">
               &nbsp;<input id="login" name="login" type="text" class="validate">
-              <label for="login">Login</label>
+              <label for="login">Логин</label>
             </div>
             <div class="input-field col s6">
               &nbsp;<input id="Vk" name="VK" type="text" class="validate">
-              <label for="Vk">VK</label>
+              <label href="vk.com" for="Vk">Ссылка на страницу в ВКонтакте</label>
             </div>
             <div class="input-field col s6">
-              &nbsp;<input id="password" name="password" type="password" class="validate">
-              <label for="password">Password</label>
+              &nbsp;<input id="Tg" name="TG" type="text" class="validate">
+              <label for="Tg">Ваш логин в Телеграмме</label>
             </div>
-            <div class="input-field col s6">
-              &nbsp;<input id="repassword" name="repassword" type="password" class="validate">
-              <label for="repassword">Repeat password</label>
+            <div class="row">
+                <div class="input-field col s6">
+                  &nbsp;<input id="password" name="password" type="password" class="validate">
+                  <label for="password">Пароль</label>
+                </div>
+                <div class="input-field col s6">
+                  &nbsp;<input id="repassword" name="repassword" type="password" class="validate">
+                  <label for="repassword">Повторите пароль</label>
+                </div>
             </div>
         </div>
-        &nbsp;&nbsp;&nbsp;&nbsp;<input class="waves-effect waves-light btn" type="submit">
+        &nbsp;&nbsp;&nbsp;&nbsp;<input class="waves-effect waves-light btn blue" type="submit" value="Далее">
         <h4><font color="red">{{error}}</font></h4>
     </form>
 <script>

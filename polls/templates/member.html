@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<head>
+    <title>Devents</title>
+    <meta charset="UTF-81">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+</head>
+<body>
+    <nav class="#1565c0 blue darken-2">
+        <div class="nav-wrapper">
+            <div class="brand-logo">&nbsp;&nbsp;&nbsp;Devent</div>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="/accounts/profile" class="top">Профиль</a></li>
+                <li><a href="/accounts/sign_up_room" class="top">Создать комнату</a></li>
+                <li><a href="/login">Выйти</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="row">
+        <div class="col s12 m1000">
+          <div class="card">
+            <div class="card-image">
+            </div>
+            <div class="card-content">
+              <h3>{{ member.first_name }}&nbsp;&nbsp;{{ member.last_name }}</h3>
+                <a href="/accounts/member/{{ member.id }}/"><font size="5">#id{{member.person.id}}</font></a>
+            </div>
+          </div>
+        </div>
+      </div>
+<!--Import jQuery before materialize.js-->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+</body>
+</html>

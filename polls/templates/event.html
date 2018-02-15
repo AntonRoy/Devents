@@ -4,71 +4,127 @@
     <title>Devents</title>
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-    <nav>
+    <nav class="#1565c0 blue darken-2">
         <div class="nav-wrapper">
             <div class="brand-logo">&nbsp;&nbsp;&nbsp;Devent</div>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a href="/accounts/profile" class="top">Profile</a></li>
-                <li><a href="/accounts/sign_up_room" class="top">Sign up room</a></li>
-                <li><a href="/main">Log out</a></li>
+                <li><a href="/accounts/profile" class="top">Профиль</a></li>
+                <li><a href="/accounts/sign_up_room" class="top">Создать комнату</a></li>
+                <li><a href="/login">Выйти</a></li>
             </ul>
         </div>
     </nav>
-     <div class="row">
+    <div class="row">
          {% csrf_token %}
-        <div class="col s12 m7">
+        <div class="col s12 m200">
           <div class="card">
             <div class="card-image">
               <img src="{{image_path}}">
             </div>
             <div class="card-content">
-              <h3>{{event_name}}</h3>
-                <label>{{ discription }}</label>
+              <h3>{{ event.name }}</h3>
+                <span>{{ event.cmt }}</span>
             </div>
             <div class="card-action">
                 {% if admin == 1 %}
-                    <a href="/edit_room">Edit event</a>
+                    <a href="/accounts/edit_event/{{event.id}}/">Редактировать</a>
                 {% endif %}
-            </div>
-          </div>
-        </div>
-      </div>
-    <div class="row">
-        <div class="col s12 m7">
-          <div class="card">
-            <div class="card-content">
-              <p><font color="#696969" size="5">{{ time }}</font></p>
             </div>
           </div>
         </div>
       </div>
     <table>
       <tr>
+          <th>
+              <div class="row">
+                <div class="col s12 m210">
+                  <div class="card">
+                    <div class="card-content">
+                        {% if event.is_task %}
+                            <p><font color="#808080" size="2">крайний срок сдачи:</font></p>
+                        {% else %}
+                            <p><font color="#808080" size="2">Дата и время мероприятия:</font></p>
+                        {% endif %}
+                        <a><i class="material-icons">alarm</i><font size="5">{{ event.date }}</font></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </th>
         <th>
             <div class="row">
-                <div class="col s20 m7">
-                  <div class="card blue-grey whiten-10">
+                <div class="col s20 m12">
+                  <div class="card blue whiten-10">
                     <div class="card-content white-text">
-                      <span class="card-title">Members</span>
+                        {% if event.is_task == 0 %}
+                            <span class="card-title">Участники</span>
+                        {% else %}
+                            <span class="card-title">Должники</span>
+                        {% endif %}
                     </div>
                     <div class="collection">
                         {% for member in members%}
-                            <a class="collection-item">{{member}}</a>
+                            <a href="/accounts/member/{{member.id}}" class="collection-item">{{member}}</a>
                         {% endfor %}
                       </div>
                   </div>
                 </div>
             </div>
+            {% if admin %}
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="input-field col s6 m6">
+                        <select multiple name="new_members">
+                            {% for member in new_members%}
+                                &nbsp;&nbsp;&nbsp;<option selected="true" value="{{member.id}}">{{member}}</option>
+                            {%endfor%}
+                        </select>
+                        &nbsp;&nbsp;&nbsp;<label>Choose memebrs</label>
+                      </div>
+                    <input type="submit" class="waves-effect waves-light btn green" value="Добавить"><font color="white">{{error}}</font>
+                    <input type="hidden" name="form_type" value="event">
+                </form>
+            {% endif %}
         </th>
       </tr>
     </table>
+     <div align="right">
+    {% if not event.is_task %}
+        <a href="#leave_modal" class="btn-floating btn-large waves-effect waves-light red  modal-trigger model-open"><i class="material-icons">remove_circle_outline</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+    {% endif %}
+    </div>
+    <div id="leave_modal" class="modal">
+            <div class="modal-content">
+                <form method="post" id="leave_event">
+                    {% csrf_token %}
+                    <div align="center">
+                        <h4>Вы уверены, что хотите покинуть мероприятие?</h4>
+                    </div>
+                    <div class="row">
+                        <button class="waves-effect waves-light green btn modal-close">Нет</button>
+                        <button class="waves-effect waves-light red btn modal-close" type="submit">Да</button>
+                        <input type="hidden" name="form_type" value="leave_event">
+                    </div>
+                </form>
+            </div>
+        </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script>
+        $(document).ready(function() {
+        $('select').material_select();
+        });
+    </script>
+    <script>
+        $(document).ready(function(){
+            $('.modal').modal();
+        });
+    </script>
     <script>
         $(".dropdown-button").dropdown();
     </script>
-<!--Import jQuery before materialize.js-->
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
 </body>
 </html>

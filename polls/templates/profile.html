@@ -1,72 +1,98 @@
 <!DOCTYPE html>
-<head xmlns="http://www.w3.org/1999/html">
+<head>
     <title>Devents</title>
+    <meta charset="UTF-81">
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-    <nav>
+    <nav class="#1565c0 blue darken-2">
         <div class="nav-wrapper">
             <div class="brand-logo">&nbsp;&nbsp;&nbsp;Devent</div>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a href="/accounts/profile" class="top">Profile</a></li>
-                <li><a href="/accounts/sign_up_room" class="top">Sign up room</a></li>
-                <li><a href="/main">Log out</a></li>
+                <li><a href="/accounts/profile" class="top">Профиль</a></li>
+                <li><a href="/accounts/sign_up_room" class="top">Создать комнату</a></li>
+                <li><a href="/login">Выйти</a></li>
             </ul>
         </div>
     </nav>
-     <div class="row">
-        <div class="col s12 m7">
+    <div class="row">
+        <div class="col s12 m1000">
           <div class="card">
             <div class="card-image">
-              <img src="{{image_path}}">
             </div>
             <div class="card-content">
-              <h3>{{name}}&nbsp;{{lastname}}</h3>
-                <h5> Your id - {{ID}}</h5>
+              <h3>{{user.first_name}}&nbsp;&nbsp;{{user.last_name}}</h3>
+                <a href="/accounts/profile"><font size="4">#id{{user.person.id}}</font></a>
             </div>
             <div class="card-action">
-              <a href="/accounts/profile/edit_profile">Edit profile</a>
+              <a href="/accounts/profile/edit_profile">Редактировать</a>
             </div>
           </div>
         </div>
       </div>
-    <table>
-      <tr>
-        <th>
-            <div class="row">
-                <div class="col s12 m6">
-                  <div class="card blue-grey whiten-1">
-                    <div class="card-content white-text">
-                      <span class="card-title">Events</span>
+    <div class="card">
+    <div class="card-tabs">
+      <ul class="tabs tabs-fixed-width">
+        <li class="tab"><a class="active" href="#tasks">Задачи</a></li>
+        <li class="tab"><a href="#events">Мероприятия</a></li>
+        <li class="tab"><a href="#groups"><i class="material-icons center">group</i></a></li>
+      </ul>
+    </div>
+    <div class="card-content grey lighten-4">
+      <div id="events">
+          <ul class="collapsible" data-collapsible="accordion">
+            {% for event in events%}
+                <li>
+                    <div class="collapsible-header">
+                        <a>
+                            {{event}}#id{{event.id}}
+                            <br>
+                            <i class="material-icons">alarm</i>{{event.date}}
+                        </a>
                     </div>
-                     <div class="collection">
-                        {% for event in events%}
-                            <a href="/accounts/event/{{event.id}}" class="collection-item">{{event}}</a>
-                        {% endfor %}
-                      </div>
-                  </div>
-                </div>
-            </div>
-        </th>
-        <th>
-            <div class="row">
-                <div class="col s12 m6">
-                  <div class="card blue-grey whiten-10">
-                    <div class="card-content white-text">
-                      <span class="card-title">Groups</span>
+                    <div class="collapsible-body">
+                        <span>{{ event.cmt }}</span>
+                        <br>
+                        <a href="/accounts/event/{{event.id}}">Подробнее>></a>
                     </div>
-                    <div class="collection">
-                        {% for group in groups%}
-                            <a href="/accounts/room/{{group.id}}" class="collection-item">{{group}}</a>
-                        {% endfor %}
-                      </div>
-                  </div>
-                </div>
-            </div>
-        </th>
-      </tr>
-    </table>
+                </li>
+            {% endfor %}
+          </ul>
+      </div>
+      <div id="tasks">
+          <ul class="collapsible" data-collapsible="accordion">
+            {% for task in tasks%}
+                <li>
+                    <div class="collapsible-header">
+                        <a>
+                            {{task}}#id{{task.id}}
+                            <br>
+                            <i class="material-icons">alarm</i>{{task.date}}
+                        </a>
+                    </div>
+                    <div class="collapsible-body">
+                        <span>{{ task.cmt }}</span>
+                        <br>
+                        <a href="/accounts/task/{{task.id}}">Подробнее>></a>
+                    </div>
+                </li>
+            {% endfor %}
+          </ul>
+      </div>
+      <div id="groups">
+          <div class="collection" data-collapsible="accordion">
+            {% for group in groups%}
+              <a href="/accounts/room/{{group.id}}" class="collection-item">
+                  <h5>{{group}}</h5>
+                  <span>{{group.cmt}}</span>
+              </a>
+            {% endfor %}
+          </div>
+      </div>
+    </div>
+  </div>
     <script>
         $(".dropdown-button").dropdown();
     </script>

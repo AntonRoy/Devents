@@ -3,97 +3,403 @@
     <title>Devents</title>
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-    <nav>
+    <nav class="#1565c0 blue darken-2">
         <div class="nav-wrapper">
             <div class="brand-logo">&nbsp;&nbsp;&nbsp;Devent</div>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a href="/accounts/profile" class="top">Profile</a></li>
-                <li><a href="/accounts/sign_up_room" class="top">Sign up room</a></li>
-                <li><a href="/main">Log out</a></li>
+                <li><a href="/accounts/profile" class="top">Профиль</a></li>
+                <li><a href="/accounts/sign_up_room" class="top">Создать комнату</a></li>
+                <li><a href="/login">Выйти</a></li>
             </ul>
         </div>
     </nav>
      <div class="row">
-        <div class="col s12 m7">
+        <div class="col s12 m1000">
           <div class="card">
             <div class="card-image">
-              <img src="{{ image_path }}">
             </div>
             <div class="card-content">
-              <h3>{{ room_name }}</h3>
-                <h5>{{discription}}</h5>
+              <h3>{{ room.name }}</h3>
+                <span>{{ room.cmt }}</span>
             </div>
             <div class="card-action">
-              <a href="/accounts/edit_room/{{room_id}}">Edit room</a>
+                {% if admin %}
+                    <a href="/accounts/edit_room/{{room.id}}">Редактировать</a>
+                    <a href="#modal3" class="modal-trigger modal-open">Отправить уведомление</a>
+                {% endif %}
             </div>
           </div>
         </div>
       </div>
-    <table>
-      <tr>
-        <th>
-            <div class="row">
-                <div class="col s12 m6">
-                  <div class="card blue-grey whiten-1">
-                    <div class="card-content white-text">
-                      <span class="card-title">Events</span>
+    <div class="card">
+    <div class="card-tabs">
+      <ul class="tabs tabs-fixed-width">
+        <li class="tab"><a class="active" href="#members"><i class="material-icons center">person</i></a></li>
+        <li class="tab"><a href="#tasks">Задачи</a></li>
+        <li class="tab"><a href="#events">Мероприятия</a></li>
+        <li class="tab"><a href="#admins">Администраторы</a></li>
+      </ul>
+    </div>
+    <div class="card-content grey lighten-4">
+      <div id="events">
+          <ul class="collapsible" data-collapsible="accordion">
+            {% for event in events%}
+                <li class="event" data-room_id="{{room.id}}" data-event_id="{{event.id}}">
+                    <div class="collapsible-header">
+                        <a>
+                            {{event}}#id{{event.id}}
+                            <br>
+                            <i class="material-icons">alarm</i>{{event.date}}
+                        </a>
                     </div>
-                     <div class="collection">
-                        {% for event in events%}
-                            <a href="/accounts/event/{{event.id}}" class="collection-item">{{event}} {{event.date}} {{event.time}}</a>
-                        {% endfor %}
-                         <a href="/accounts/room/sign_up_event/{{room_id}}" class="collection-item">Create event</a>
-                      </div>
+                    <div class="collapsible-body">
+                        <span>{{ event.cmt }}</span>
+                        {% if admin %}}
+                            <i class="material-icons right delete-event tooltipped" data-position="top" data-delay="10" data-tooltip="Удалить">clear</i>
+                        {% endif %}
+                        <br>
+                        <a href="/accounts/event/{{event.id}}/">Подробнее>></a>
+                    </div>
+                </li>
+            {% endfor %}
+          </ul>
+          {% if admin %}
+                <a href="#modal1" class="btn-floating btn-large waves-effect waves-light yellow modal-trigger modal-open"><i class="material-icons">add</i></a>
+            {% endif %}
+      </div>
+        <div id="modal3" class="modal modal-fixed-footer">
+            <div class="modal-content">
+          <form method="post" id="noti">
+            {% csrf_token %}
+                    <div class="row">
+                <div class="col s12">
+                  <div class="row">
+                    <div class="input-field col s6">
+                      <i class="material-icons prefix">message</i>
+                      <textarea name="message" id="icon_prefix2" class="materialize-textarea"></textarea>
+                      <label for="icon_prefix2">Message</label>
+                    </div>
                   </div>
                 </div>
+              </div>
+            <div class="input-field col s6 m6">
+                <select multiple name="members_send">
+                    {% for member in members_and_admins%}
+                        &nbsp;&nbsp;&nbsp;<option selected="true" value="{{member.id}}">{{member}}</option>
+                    {%endfor%}
+                </select>
+                &nbsp;&nbsp;&nbsp;<label>Choose memebrs</label>
+              </div>
+            &nbsp;&nbsp;&nbsp;&nbsp;<button class="waves-effect waves-light btn modal-close" type="submit"><i class="material-icons center">send</i></button>
+                <input type="hidden" name="form_type" value="noti">
+            </form>
             </div>
-        </th>
-        <th>
-            <div class="row">
-                <div class="col s12 m6">
-                  <div class="card blue-grey whiten-10">
-                    <div class="card-content white-text">
-                      <span class="card-title">Members</span>
+            <div class="modal-footer">
+            </div>
+          </div>
+        <div id="modal1" class="modal modal-fixed-footer">
+            <div class="modal-content">
+              <form method="post" id="event">
+                {% csrf_token %}
+                <p>&shy;&nbsp;&nbsp;</p>
+                <div align="center">
+                    <div class="input-field col s6">
+                      &nbsp;<input id="event_name" name="event_name" type="text" class="validate">
+                      <label for="event_name">Название мероприятия</label>
                     </div>
-                    <div class="collection">
-                        {% for member in members%}
-                            <a class="collection-item">{{member}}</a>
-                        {% endfor %}
-                        <form method="post">
-                            {% csrf_token %}
-                            <input name="id_" class="collection-item">
-                            <button type="submit" class="collection-item">Add</button> <font color="white">{{error}}</font>
-                        </form>
-                      </div>
+                    <div class="input-field col s6">
+                      &nbsp;<input id="discription_event" name="discription" type="text" class="validate">
+                      <label for="discription_event">Описание</label>
+                    </div>
+                    <div class="input-field col s6">
+                      &nbsp<input id="date_event" type="text" class="datepicker" name="data">
+                      <label for="date_event">Дата</label>
+                    </div>
+                    <div class="input-field col s6">
+                      &nbsp<input id="time_event" type="text" class="timepicker" name="time">
+                      <label for="time_event">Время</label>
+                    </div>
+                       <div class="input-field col s6 m6">
+                        <select multiple name="members_send">
+                            {% for member in members_and_admins%}
+                                &nbsp;&nbsp;&nbsp;<option selected="true" value="{{member.id}}">{{member}}</option>
+                            {%endfor%}
+                        </select>
+                        &nbsp;&nbsp;&nbsp;<label>Choose memebrs</label>
                   </div>
                 </div>
+                  &nbsp;&nbsp;&nbsp;&nbsp;<button class="waves-effect waves-light btn modal-close" type="submit">Создать</button>
+                    <input type="hidden" name="form_type" value="event">
+            </form>
             </div>
-        </th>
-          <th>
-            <div class="row">
-                <div class="col s12 m6">
-                  <div class="card blue-grey whiten-10">
-                    <div class="card-content white-text">
-                      <span class="card-title">Admins</span>
+            <div class="modal-footer">
+            </div>
+          </div>
+
+        <div id="tasks">
+          <ul class="collapsible" data-collapsible="accordion">
+            {% for task in tasks%}
+                <li>
+                    <div class="collapsible-header">
+                        <a>
+                            {{task}}#id{{task.id}}
+                            <br>
+                            <i class="material-icons">alarm</i>{{task.date}}
+                        </a>
                     </div>
-                    <div class="collection">
-                        {% for admin in admins%}
-                            <a class="collection-item">{{admin}}</a>
-                        {% endfor %}
-                      </div>
+                    <div class="collapsible-body">
+                        <span>{{ task.cmt }}</span>
+                        <br>
+                        <a href="/accounts/task/{{task.id}}">Подробнее>></a>
+                    </div>
+                </li>
+            {% endfor %}
+          </ul>
+          {% if admin %}
+                <a href="#modal2" class="btn-floating btn-large waves-effect waves-light yellow modal-trigger modal-open"><i class="material-icons">add</i></a>
+            {% endif %}
+      </div>
+        <div id="modal2" class="modal modal-fixed-footer">
+            <div class="modal-content">
+              <form method="post" id="task">
+                {% csrf_token %}
+                <p>&shy;&nbsp;&nbsp;</p>
+                <div align="center">
+                    <div class="input-field col s6">
+                      &nbsp;<input id="task_name" name="task_name" type="text" class="validate">
+                      <label for="task_name">Название задания</label>
+                    </div>
+                    <div class="input-field col s6">
+                      &nbsp;<input id="discription_task" name="discription" type="text" class="validate">
+                      <label for="discription_task">Описание</label>
+                    </div>
+                    <div class="input-field col s6">
+                      &nbsp<input id="date_task" type="text" class="datepicker" name="data">
+                      <label for="date_task">Срок сдачи</label>
+                    </div>
+                    <div class="input-field col s6">
+                      &nbsp<input id="time_task" type="text" class="timepicker" name="time">
+                      <label for="time_task">Время</label>
+                    </div>
+
+                    <div class="input-field col s6 m6">
+                        <select multiple name="members_send">
+                            {% for member in members_and_admins%}
+                                &nbsp;&nbsp;&nbsp;<option selected="true" value="{{member.id}}">{{member}}</option>
+                            {%endfor%}
+                        </select>
+                        &nbsp;&nbsp;&nbsp;<label>Choose memebrs</label>
                   </div>
                 </div>
+                &nbsp;&nbsp;&nbsp;&nbsp;<input class="waves-effect waves-light btn modal-close" type="submit" value="Создать">
+                    <input type="hidden" name="form_type" value="task">
+            </form>
             </div>
-        </th>
-      </tr>
-    </table>
-    <script>
-        $(".dropdown-button").dropdown();
-    </script>
-<!--Import jQuery before materialize.js-->
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+            <div class="modal-footer">
+            </div>
+          </div>
+      <div id="members">
+          <div>
+              <ul class="collapsible" data-collapsible="accordion">
+                  {% for item in data%}
+                        <li data-room_id="{{room.id}}" data-member_id="{{item.1.id}}" class="member">
+                            {% if admin %}
+                                <i class="material-icons right delete-member tooltipped" data-position="top" data-delay="10" data-tooltip="Удалить">clear</i>
+                            {% endif %}
+                            <div class="collapsible-header">
+                                <a href="/accounts/member/{{item.1.id}}">{{item.1}}#id{{item.1.id}}</a>
+                            </div>
+                            <div class="collapsible-body">
+                                {% if admin %}
+                                    {% for user_task in item.0 %}
+                                        <div class="collection task" data-task_id="{{user_task.id}}">
+                                            <i class="material-icons right delete-task tooltipped"  data-position="top" data-delay="10" data-tooltip="Закрыть задание">check</i>
+                                            <a href="/accounts/task/{{user_task.id}}" class="collection-item">
+                                                {{user_task}}
+                                                <br>
+                                                <i class="material-icons center">alarm</i>{{user_task.date}}
+                                            </a>
+                                        </div>
+                                    {% endfor %}
+                                    <br>
+                                    &nbsp;&nbsp;&nbsp;<a href="#modall{{item.1.id}}" class="btn-floating btn-large waves-effect waves-light yellow modal-trigger modal-open"><i class="material-icons">add</i></a>
+                                        <div id="modall{{item.1.id}}" class="modal modal-fixed-footer">
+                                                <div class="modal-content">
+                                                  <form method="post" id="task_on_user">
+                                                    {% csrf_token %}
+                                                      <div align="center">
+                                                        <div class="input-field col s6">
+                                                          &nbsp;<input id="task_name_on_user" name="task_name_on_user" type="text" class="validate">
+                                                          <label for="task_name_on_user">Название</label>
+                                                        </div>
+                                                        <div class="input-field col s6">
+                                                          &nbsp;<input id="discription" name="discription" type="text" class="validate">
+                                                          <label for="discription">Описание</label>
+                                                        </div>
+                                                        <div class="input-field col s6">
+                                                          &nbsp<input id="date" type="text" class="datepicker" name="data">
+                                                          <label for="date">Дата</label>
+                                                        </div>
+                                                        <div class="input-field col s6">
+                                                          &nbsp<input id="time" type="text" class="timepicker" name="time">
+                                                          <label for="time">Время</label>
+                                                        </div>
+                                                    </div>
+                                                        <input type="hidden" value="{{item.1.id}}" name="member_id">
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;<input class="waves-effect waves-light btn modal-close" type="submit" value="Создать">
+                                                        <input type="hidden" name="form_type" value="task_on_user">
+                                                </form>
+                                                </div>
+                                                <div class="modal-footer">
+                                                </div>
+                                              </div>
+                                {% endif %}
+                            </div>
+                        </li>
+                  {% endfor %}
+              </ul>
+          </div>
+          <form method="post" id="add_user">
+            {% csrf_token %}
+            {% if admin %}
+                <input name="id_" class="collection-item">
+                <input type="submit" class="waves-effect waves-light btn green" value="Добавить"><font color="white">{{error}}</font>
+                <input type="hidden" name="form_type" value="add_user">
+            {% endif %}
+        </form>
+      </div>
+
+
+      <div id="admins">
+          <div class="collection">
+              {% for admin in admins %}
+                <a href="/accounts/member/{{admin.id}}" class="collection-item">{{admin}}</a>
+            {% endfor %}
+          </div>
+      </div>
+    </div>
+  </div>
+    <div align="right">
+    {% if not admin %}
+        <a href="#modalr" class="btn-floating btn-large waves-effect waves-light red modal-trigger model-open"><i class="material-icons">remove_circle_outline</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+    {% endif %}
+    </div>
+    <div id="modalr" class="modal">
+            <div class="modal-content">
+                <form method="post" id="leave_room">
+                    {% csrf_token %}
+                    <div align="center">
+                        <h4>Вы уверены, что хотите выйти из комнаты?</h4>
+                    </div>
+                    <div class="row" align="right">
+                        <button class="waves-effect waves-light green btn modal-close">Нет</button>
+                        <button class="waves-effect waves-light red btn modal-close" type="submit">Да</button>
+                        <input type="hidden" name="form_type" value="leave_room">
+                    </div>
+                </form>
+            </div>
+        </div>
+     <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script>
+        $(document).ready(function(){
+                $('.modal').modal();
+          });
+    </script>
+    <script>
+        $(document).ready(function() {
+        $('select').material_select();
+        });
+    </script>
+    <script>
+         $(document).ready(function(){
+            $('.collapsible').collapsible();
+          });
+    </script>
+    <script>
+         $(document).ready(function(){
+                $('.modal').modal();
+          });
+        $('#modal').modal('open');
+        $('#modal').modal('close');
+    </script>
+<script>
+        $(".dropdown-button").dropdown();
+        $('.delete-member').on('click', function(){
+            var $this = $(this);
+            var member_id = $this.parents('li.member').data('member_id');
+            var room_id = $this.parents('li.member').data('room_id');
+            $.ajax({
+                url: '/accounts/delete/' + member_id + '/' + room_id,
+                success: function(res){
+                    console.log(res);
+                    if (res == 1){
+                        $this.parents('li.member').remove()
+                    }else{
+                        alert('Что-то пошло не так, попробуйте еще раз');
+                    }
+                }
+            })
+        })
+        $('.delete-task').on('click', function (){
+            var $this = $(this);
+            var task_id = $this.parents('div.task').data('task_id');
+            var member_id = $this.parents('li.member').data('member_id');
+            $.ajax({
+                url: '/accounts/delete_task/' + member_id + '/' + task_id,
+                success: function (res) {
+                    console.log(res);
+                    if (res == 1) {
+                        $this.parents('div.task').remove()
+                    } else{
+                        alert('Что-то пошло не так, попробуйте еще раз')
+                    }
+                }
+            })
+        })
+        $('.delete-event').on('click', function () {
+            var $this = $(this);
+            var event_id = $this.parents('li.event').data('event_id');
+            var room_id = $this.parents('li.event').data('room_id');
+            $.ajax({
+                url: '/accounts/delete_event/' + room_id + '/' + event_id,
+                success: function (res) {
+                    console.log(res);
+                    if (res == 1)
+                    {
+                        $this.parents('li.event').remove()
+                    } else{
+                        alert('Что-то пошло не так, попробуйте еще раз')
+                    }
+                }
+            })
+        })
+    </script>
+    <script>
+        $('.datepicker').pickadate({
+            selectMonths: true, // Creates a dropdown to control month
+            selectYears: 15, // Creates a dropdown of 15 years to control year,
+            today: 'Today',
+            clear: 'Clear',
+            close: 'Ok',
+            closeOnSelect: false // Close upon selecting a date,
+          });
+    </script>
+    <script>
+         $('.timepicker').pickatime({
+            default: 'now', // Set default time: 'now', '1:30AM', '16:30'
+            fromnow: 0,       // set default time to * milliseconds from now (using with default = 'now')
+            twelvehour: false, // Use AM/PM or 24-hour format
+            donetext: 'OK', // text for done-button
+            cleartext: 'Clear', // text for clear-button
+            canceltext: 'Cancel', // Text for cancel-button
+            autoclose: false, // automatic close timepicker
+            ampmclickable: true, // make AM PM clickable
+            aftershow: function(){} //Function for after opening timepicker
+          });
+    </script>
 </body>
 </html>
