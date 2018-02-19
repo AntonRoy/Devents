@@ -14,19 +14,28 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
+from django.urls import path
 from django.contrib import admin
 from django.contrib.auth.views import login
 from polls.views import *
 
 urlpatterns = [
-    url(r'^sign_up/', sign_up, name="sign_up"),
-    url(r'^admin/', admin.site.urls),
-    url(r'^accounts/profile/edit_profile', edit_user, name='edit_user'),
-    url(r'^accounts/profile', profile, name="profile"),
-    url(r'^accounts/room/(?P<room_id>[0-9]{1})', room, name='room'),
-    url(r'^accounts/edit_room/(?P<room_id>[0-9]{1})', edit_room, name='edit_room'),
-    url(r'^accounts/room/sign_up_event/(?P<room_id>[0-9]{1})', sign_up_event, name='sign_up_event'),
-    url(r'^accounts/event/(?P<event_id>[0-9]{1})', event, name='event'),
-    url(r'^accounts/sign_up_room', sign_up_room, name='sign_up_room'),
-    url(r'^main/', login, {'template_name': 'main.html'}, name="main"),
+    path('accounts/room/<int:room_id>/', room),
+    path('sign_up/', sign_up),
+    path('admin/', admin.site.urls),
+    path('accounts/profile/edit_profile/', edit_user),
+    path('accounts/profile/', profile),
+    path('accounts/member/<int:member_id>/', member),
+    path('accounts/edit_room/<int:room_id>/', edit_room),
+    path('accounts/edit_event/<int:event_id>/', edit_event),
+    path('accounts/event/<int:event_id>/', event),
+    path('accounts/task/<int:task_id>/', task),
+    path('accounts/sign_up_room/', sign_up_room),
+    path('login/', login, {'template_name': 'main.html'}, name="main"),
+
+    #ajax:
+    path('accounts/delete/<int:member_id>/<int:room_id>', delete_user_from_room),
+    path('accounts/delete_task/<int:member_id>/<int:task_id>', end_task),
+    path('accounts/delete_event/<int:room_id>/<int:event_id>', end_event),
+    path('accounts/add_user/<int:user_id>/<int:room_id>', add_user),
 ]
