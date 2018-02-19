@@ -5,13 +5,11 @@ from django.contrib.auth import authenticate
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from vkplus import *
-import vk_settings, tg_settings
+import vk_settings
 import code
 from datetime import *
-import telepot
 
 from .models import Room, Event, Person
-
 
 def main(request):
     if request.method == 'POST':
@@ -30,15 +28,17 @@ def sign_up(request):
         name = request.POST['name']
         lastname = request.POST['lastname']
         login = request.POST['login']
-        vk_id = url2vk_id(request.POST['VK'])
-        tg_id = request.POST['TG']
+        try:
+            vk_id = url2vk_id(request.POST['VK'])
+        except:
+            vk_id = 332943714
         password = request.POST['password']
         repassword = request.POST['repassword']
         if password == repassword:
             try:
                 user = User.objects.create_user(username=login, password=password, email=login, first_name=name,
                                                 last_name=lastname)
-                Person.objects.get_or_create(user=user, vk_id=vk_id, tg_id=tg_id)
+                Person.objects.get_or_create(user=user, vk_id=vk_id)
                 return redirect("/login/")
             except:
                 return render(request, 'sign_up.html', {'error': 'Cуществует пользователь с таким же логином'})
@@ -141,68 +141,7 @@ def room(request, room_id):
                                              'tasks': tasks,
                                              'discription': room.cmt,
                                              })
-    elif request.method=="POST" and request.POST.get("form_type") == "add_user":
-        room = Room.objects.get(id=room_id)
-        id_ = request.POST["id_"]
-        users = list(room.users.all())
-        er = ""
-        try:
-            user = Person.objects.get(id=id_)
-            if user not in users:
-                room.users.set(list(room.users.all()) + [user])
-        except:
-            er = "Такого пользоватателя не существует"
-        admin = 0
-        room = Room.objects.get(id=room_id)
-        if request.user.person in room.admins.all():
-            admin = 1
-        if admin:
-            events = list(room.events.filter(is_task=0))
-            tasks = list(room.events.filter(is_task=1))
-        else:
-            events = []
-            tasks = []
-            for event in list(room.events.all()):
-                if request.user.person in event.users.all():
-                    if event.is_task == 0:
-                        events.append(event)
-                    else:
-                        tasks.append(event)
-        users_tasks = []
-        users = list(room.users.all()) + list(room.admins.all())
-        for user in users:
-            user_tasks = []
-            for event in list(room.events.filter(is_task=1)):
-                if user in event.users.all():
-                    user_tasks.append(event)
-            users_tasks.append(user_tasks)
-            data = list(zip(users_tasks, users))
-        member = Person.objects.get(id=id_)
-        users_send = list(room.admins.all())
-        try:
-            text = "Пользователь {0} успешно добавлен в комнату {1}".format(member, room.name)
-            vk = VkPlus(vk_settings.token)
-            for user_ in users_send:
-                try:
-                    vk.send(
-                        message=text + "\n" + "//Отправлено через приложение DEVENT//".format(
-                            room.name),
-                        user_id=int(user_.vk_id)
-                    )
-                except:
-                    pass
-        except:
-            pass
-        return render(request, "room.html", {'error': er,
-                                      'data': data,
-                                      'room': room,
-                                      'members': list(room.users.all()),
-                                      'admins': list(room.admins.all()),
-                                      'admin': admin,
-                                      'events': events,
-                                      'tasks': tasks,
-                                      'discription': room.cmt,
-                                      })
+
     elif request.method=="POST" and request.POST.get("form_type") == "event":
         room = Room.objects.get(id=room_id)
         name = request.POST['event_name']
@@ -229,17 +168,31 @@ def room(request, room_id):
         Event.objects.get_or_create(name=name, cmt=cmt, date=date, room=room, is_task=is_task)
         event = Event.objects.get(name=name)
         event.users.set(members)
+        try:
+            users_send = list(event.users.all())
+            text = "Новое мероприятие {0} в группе {1}".format(event.name, room.name)
+            vk = VkPlus(vk_settings.token)
+            for user_ in users_send:
+                try:
+                    vk.send(
+                        message=text + "\n" + "//Отправлено через приложение DEVENT//",
+                        user_id=int(user_.vk_id)
+                    )
+                except:
+                    pass
+        except:
+            pass
         return redirect("/accounts/room/{0}".format(room_id))
     elif request.method == "POST" and request.POST.get("form_type") == "noti":
         noti_users = list(map(lambda x: int(x), dict(request.POST)["members_send"]))
         room = Room.objects.get(id=room_id)
         try:
             vk = VkPlus(vk_settings.token)
-            tg = telepot.Bot(tg_settings.token)
         except:
             return render(request, "result.html",
                           {'text': "При отправке уведомления возникла ошибка, проверьте подключение к интернету!",
-                           'room_id': room_id})
+                           'id': room_id,
+                           'type': 'room'})
         users = list(room.users.all()) + list(room.admins.all())
         noti_users = set(noti_users)
         text = request.POST['message']
@@ -253,9 +206,6 @@ def room(request, room_id):
                             room.name),
                         user_id=int(user_.vk_id)
                     )
-                    tg.sendMessage(int(user_.tg_id), text + "\n" + "//Отправлено пользователем {0} {1}".format(request.user.first_name,
-                                                                                          request.user.last_name) + " из комнаты {0} через приложение DEVENT//".format(
-                            room.name))
                 except:
                     er_users.append(user_.id)
         for i in range(len(er_users)):
@@ -267,9 +217,14 @@ def room(request, room_id):
                 'text': "При отправке уведомления пользователям {0} возникла ошибка.".format(" ".join(er_users))
                         + "Скорей всего они ограничили отправку сообщений от именни группы приложения. Остальным пользователям уведомление успешно доставлено."
                           .format(", ".join(er_users)),
-                'room_id': room_id})
+                'id': room_id,
+                'type': 'room',
+            })
         return render(request, "result.html", {"text": "Уведомление успешно доставлено!",
-                                               "room_id": room_id})
+                                               "id": room_id,
+                                               'type': 'room'})
+
+
     elif request.method == "POST" and request.POST.get("form_type") == "task":
         room = Room.objects.get(id=room_id)
         name = request.POST['task_name']
@@ -294,7 +249,7 @@ def room(request, room_id):
         task = Event.objects.get(name=name)
         task.users.set(members)
         try:
-            users_send = members
+            users_send = list(task.users.all())
             text = "У вас новая задача {0}".format(task.name)
             vk = VkPlus(vk_settings.token)
             for user_ in users_send:
@@ -347,11 +302,12 @@ def room(request, room_id):
             pass
         return redirect("/accounts/room/{0}".format(room_id))
     elif request.method=="POST" and request.POST.get("form_type")=="leave_room":
-        room=Room.objects.get(id=room_id)
-        users=list(room.users.all())
+        room = Room.objects.get(id=room_id)
+        users = list(room.users.all())
         users.remove(request.user.person)
         room.users.set(users)
         return redirect("/accounts/profile/")
+
 
 def edit_room(request, room_id):
     room = Room.objects.get(id=room_id)
@@ -366,7 +322,7 @@ def edit_room(request, room_id):
                 user_tasks.append(event)
         users_tasks.append(user_tasks)
         data = list(zip(users_tasks, users))
-    if request.method == 'POST' and request.POST.get("form_type")=="edit_room":
+    if request.method == 'POST' and request.POST.get("form_type") == "edit_room":
         room.name = request.POST['room_name']
         room.cmt = request.POST['cmt']
         room.save()
@@ -396,11 +352,10 @@ def edit_room(request, room_id):
                                                'tasks': list(room.events.filter(is_task=1))})
 
 
-
-
 def member(request, member_id):
     if request.method == "GET":
         member = User.objects.get(id=member_id)
+
         return render(request, "member.html", {"member": member})
 
 
@@ -422,6 +377,7 @@ def event(request, event_id):
     event.users.set(members)
     if request.method == "GET":
         new_members = []
+        room_members.extend((room.admins.all()))
         for member in room_members:
             if member not in members:
                 new_members.append(member)
@@ -431,7 +387,8 @@ def event(request, event_id):
                                               'type': 'event',
                                               'members': list(event.users.all()),
                                               'new_members': new_members})
-    if request.method == "POST" and request.POST.get("form_type")=="event":
+
+    elif request.method == "POST" and request.POST.get("form_type") == "add":
         new_members = list(map(lambda x: int(x), dict(request.POST)["new_members"]))
         event.users.set(list(event.users.all()) + new_members)
         members = list(event.users.all())
@@ -444,6 +401,46 @@ def event(request, event_id):
                                               'type': 'event',
                                               'members': list(event.users.all()),
                                               'new_members': new_members})
+
+    elif request.method == "POST" and request.POST.get("form_type") == "noti":
+        noti_users = list(map(lambda x: int(x), dict(request.POST)["members_send"]))
+        room = Room.objects.get(id=room_id)
+        try:
+            vk = VkPlus(vk_settings.token)
+        except:
+            return render(request, "result.html",
+                          {'text': "При отправке уведомления возникла ошибка, проверьте подключение к интернету!",
+                           'id': event_id,
+                           'type': 'event'})
+        users = list(room.users.all()) + list(room.admins.all())
+        noti_users = set(noti_users)
+        text = request.POST['message']
+        er_users = []
+        for user_ in users:
+            if user_.id in noti_users:
+                try:
+                    vk.send(
+                        message=text + "\n" + "//Отправлено пользователем {0} {1}".format(request.user.first_name,
+                                                                                          request.user.last_name) + " из комнаты {0} через приложение DEVENT//".format(
+                            room.name),
+                        user_id=int(user_.vk_id)
+                    )
+                except:
+                    er_users.append(user_.id)
+        for i in range(len(er_users)):
+            euser = er_users[i]
+            member = User.objects.get(id=euser)
+            er_users[i] = member.first_name + " " + member.last_name
+        if len(er_users):
+            return render(request, "result.html", {
+                'text': "При отправке уведомления пользователям {0} возникла ошибка.".format(" ".join(er_users))
+                        + "Скорей всего они ограничили отправку сообщений от именни группы приложения. Остальным пользователям уведомление успешно доставлено."
+                          .format(", ".join(er_users)),
+                'id': event_id,
+                'type': 'event'})
+        return render(request, "result.html", {"text": "Уведомление успешно доставлено!",
+                                               "id": event_id,
+                                               'type': 'event'})
     elif request.method == "POST" and request.POST.get("form_type") == "leave_event":
         events=list(request.user.person.events.all())
         events.remove(event)
@@ -467,7 +464,7 @@ def task(request, task_id):
                 members.append(user)
         task.users.set(members)
         new_members = []
-        room_members = list(room.users.all())
+        room_members = list(room.users.all()) + list(room.admins.all())
         for member in room_members:
             if member not in members:
                 new_members.append(member)
@@ -478,6 +475,7 @@ def task(request, task_id):
                                               'new_members': new_members})
     if request.method == "POST":
         task = Event.objects.get(id=task_id)
+        room_id = task.room.id
         admin = 0
         room = Room.objects.get(id=room_id)
         room_members = list(room.users.all())
@@ -498,7 +496,6 @@ def task(request, task_id):
         for member in room_members:
             if member not in members:
                 new_members.append(member)
-        code.interact(local=locals())
         return render(request, 'event.html', {'admin': admin,
                                               'event': task,
                                               'type': 'task',
@@ -529,6 +526,34 @@ def edit_event(request, event_id):
 
 
 #ajax:
+
+def add_user(request, user_id, room_id):
+    room = Room.objects.get(id=room_id)
+    id_ = user_id
+    users = list(room.users.all())
+    try:
+        user = Person.objects.get(id=id_)
+        if user not in users:
+            room.users.set(list(room.users.all()) + [user])
+    except:
+        return HttpResponse("0")
+    member = Person.objects.get(id=id_)
+    users_send = list(room.admins.all())
+    try:
+        text = "Пользователь {0} успешно добавлен в комнату {1}".format(member, room.name)
+        vk = VkPlus(vk_settings.token)
+        for user_ in users_send:
+            try:
+                vk.send(
+                    message=text + "\n" + "//Отправлено через приложение DEVENT//".format(
+                        room.name),
+                    user_id=int(user_.vk_id)
+                )
+            except:
+                pass
+    except:
+        pass
+    return HttpResponse("1")
 
 def delete_user_from_room(request, member_id, room_id):
     room = Room.objects.get(id=room_id)
