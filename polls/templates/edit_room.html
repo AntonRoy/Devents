@@ -6,7 +6,7 @@
      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-    <nav class="blue" class="blue">
+    <nav class="#1565c0 blue darken-4">
         <div class="nav-wrapper">
             <div class="brand-logo">&nbsp;&nbsp;&nbsp;Devent</div>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
@@ -271,8 +271,15 @@
           </div>
           <form method="post" id="add_user">
             {% csrf_token %}
+            {% if admin %}
+                <input name="id_" class="collection-item">
+                <input type="submit" class="waves-effect waves-light btn green" value="Добавить"><font color="white">{{error}}</font>
+                <input type="hidden" name="form_type" value="add_user">
+            {% endif %}
         </form>
       </div>
+
+
       <div id="admins">
           <div class="collection">
               {% for admin in admins %}
@@ -289,40 +296,37 @@
             </div>
             <div class="card-content">
                 <button class="btn green" type="submit">Сохранить изменения</button>
+                <input type="hidden" name="form_type" value="edit_room">
+                <a href="#delete_room_modal" class="right btn-floating btn-large waves-effect waves-light red modal-trigger model-open"><i class="material-icons">delete</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                <br>
+                &nbsp;
             </div>
           </div>
         </div>
       </div>
-        <input type="hidden" name="form_type" value="edit_room">
     </form>
-    <div align="right">
-            <a href="#delete_room_modal" class="btn-floating btn-large waves-effect waves-light red modal-trigger model-open"><i class="material-icons">delete</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-        </div>
         <div id="delete_room_modal" class="modal">
-            <div class="modal-content">
-                <form method="post" id="delete_room">
-                    {% csrf_token %}
-                    <div align="center">
-                        <h4>Вы уверены, что хотите удалить комнату?</h4>
-                    </div>
-                    <div class="row" align="right">
-                        <button class="waves-effect waves-light green btn modal-close">Нет</button>
-                        <button class="waves-effect waves-light red btn modal-close" type="submit">Да</button>
-                        <input type="hidden" name="form_type" value="delete_room">
-                    </div>
-                </form>
-            </div>
+            <form method="post" id="delete_room">
+                {% csrf_token %}
+                <div class="modal-content">
+                    <span>Вы уверены, что хотите удалить комнату?</span>
+                </div>
+                <div class="modal-footer">
+                    <button class="waves-effect waves-light green btn modal-close">Нет</button>
+                    <button class="waves-effect waves-light red btn modal-close" type="submit">Да</button>
+                </div>
+            </form>
         </div>
      <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
     <script>
-        $(document).ready(function(){
-                $('.modal').modal();
+         $(document).ready(function(){
+            $('.collapsible').collapsible();
           });
     </script>
     <script>
          $(document).ready(function(){
-            $('.collapsible').collapsible();
+                $('.modal').modal();
           });
     </script>
     <script>

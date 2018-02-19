@@ -6,12 +6,12 @@
 
 </head>
 <body>
-    <nav class="#1976d2 blue darken-2">
+    <nav class="#1976d2 blue darken-4">
         <div class="nav-wrapper">
             <div class="brand-logo">&nbsp;&nbsp;&nbsp;Devent</div>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a href="/login">Sign in</a></li>
-                <li><a href="/sign_up">Sign up</a></li>
+                <li><a href="/login">Войти</a></li>
+                <li><a href="/sign_up">Регистрация</a></li>
             </ul>
         </div>
     </nav>
@@ -29,17 +29,20 @@
                   <label for="lastname">Фамилия</label>
                 </div>
             </div>
-            <div class="input-field col s6">
-              &nbsp;<input id="login" name="login" type="text" class="validate">
-              <label for="login">Логин</label>
+            <div class="row">
+                <div class="input-field col s6">
+                  &nbsp;<input id="login" name="login" type="text" class="validate">
+                  <label for="login">Логин</label>
+                </div>
             </div>
-            <div class="input-field col s6">
-              &nbsp;<input id="Vk" name="VK" type="text" class="validate">
-              <label href="vk.com" for="Vk">Ссылка на страницу в ВКонтакте</label>
+            <div class="row">
+                <div class="input-field col s6">
+                  &nbsp;<input id="Vk" name="VK" type="text" class="validate">
+                  <label for="Vk">Ссылка на страницу в ВКонтакте</label>
+                </div>
             </div>
-            <div class="input-field col s6">
-              &nbsp;<input id="Tg" name="TG" type="text" class="validate">
-              <label for="Tg">Ваш логин в Телеграмме</label>
+            <div class="row" align="left">
+                <span>&nbsp;&nbsp;<font color="#a9a9a9">Добавтесь в группу в <a href="https://vk.com/ok_devent">DEVENT</a> в ВК, это необходимо для отправки уведомлений.</font></span>
             </div>
             <div class="row">
                 <div class="input-field col s6">
@@ -52,7 +55,7 @@
                 </div>
             </div>
         </div>
-        &nbsp;&nbsp;&nbsp;&nbsp;<input class="waves-effect waves-light btn blue" type="submit" value="Далее">
+        &nbsp;&nbsp;&nbsp;&nbsp;<button class="waves-effect waves-light btn green" type="submit">Далее</button>
         <h4><font color="red">{{error}}</font></h4>
     </form>
 <script>

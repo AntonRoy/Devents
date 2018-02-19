@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-    <nav class="#1565c0 blue darken-2">
+    <nav class="#1565c0 blue darken-4">
         <div class="nav-wrapper">
             <div class="brand-logo">&nbsp;&nbsp;&nbsp;Devent</div>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
@@ -31,6 +31,38 @@
             <div class="card-action">
                 {% if admin == 1 %}
                     <a href="/accounts/edit_event/{{event.id}}/">Редактировать</a>
+                    <a href="#modal_noti" class="modal-trigger modal-open">Отправить уведомление</a>
+                    <div id="modal_noti" class="modal modal-fixed-footer">
+                        <div class="modal-content">
+                      <form method="post" id="noti">
+                        {% csrf_token %}
+                                <div class="row">
+                            <div class="col s12">
+                              <div class="row">
+                                <div class="input-field col s6">
+                                  <i class="material-icons prefix">message</i>
+                                  <textarea name="message" id="icon_prefix2" class="materialize-textarea"></textarea>
+                                  <label for="icon_prefix2">Message</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        <div class="input-field col s6 m6">
+                            <select multiple name="members_send">
+                                {% for member in members%}
+                                    &nbsp;&nbsp;&nbsp;<option selected="true" value="{{member.id}}">{{member}}</option>
+                                {%endfor%}
+                            </select>
+                            &nbsp;&nbsp;&nbsp;<label>Choose memebrs</label>
+                          </div>
+                          <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<button class="waves-effect waves-light btn modal-close green" type="submit"><i class="material-icons center">send</i></button>
+                            <input type="hidden" name="form_type" value="noti">
+                        </form>
+                        </div>
+                        <div class="modal-footer">
+                        </div>
+                      </div>
                 {% endif %}
             </div>
           </div>
@@ -53,6 +85,25 @@
                   </div>
                 </div>
               </div>
+              {% if admin and new_memebers%}
+                <div class="card">
+                    <div class="card-content">
+                        <form method="post" id="add">
+                            {% csrf_token %}
+                            <div class="input-field col s6 m6">
+                                <select multiple name="new_members">
+                                    {% for member in new_members%}
+                                        &nbsp;&nbsp;&nbsp;<option selected="true" value="{{member.id}}">{{member}}</option>
+                                    {%endfor%}
+                                </select>
+                                &nbsp;&nbsp;&nbsp;<label>Добавить пользователей из комнаты</label>
+                              </div>
+                            <input type="submit" class="waves-effect waves-light btn green" value="Добавить"><font color="white">{{error}}</font>
+                            <input type="hidden" name="form_type" value="add">
+                        </form>
+                    </div>
+                </div>
+            {% endif %}
           </th>
         <th>
             <div class="row">
@@ -73,54 +124,39 @@
                   </div>
                 </div>
             </div>
-            {% if admin %}
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="input-field col s6 m6">
-                        <select multiple name="new_members">
-                            {% for member in new_members%}
-                                &nbsp;&nbsp;&nbsp;<option selected="true" value="{{member.id}}">{{member}}</option>
-                            {%endfor%}
-                        </select>
-                        &nbsp;&nbsp;&nbsp;<label>Choose memebrs</label>
-                      </div>
-                    <input type="submit" class="waves-effect waves-light btn green" value="Добавить"><font color="white">{{error}}</font>
-                    <input type="hidden" name="form_type" value="event">
-                </form>
-            {% endif %}
         </th>
       </tr>
     </table>
-     <div align="right">
+    <div align="right">
     {% if not event.is_task %}
         <a href="#leave_modal" class="btn-floating btn-large waves-effect waves-light red  modal-trigger model-open"><i class="material-icons">remove_circle_outline</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
     {% endif %}
     </div>
     <div id="leave_modal" class="modal">
-            <div class="modal-content">
                 <form method="post" id="leave_event">
                     {% csrf_token %}
-                    <div align="center">
-                        <h4>Вы уверены, что хотите покинуть мероприятие?</h4>
+                    <div class="modal-content">
+                        <span>Вы уверены, что хотите выйти из комнаты?</span>
                     </div>
-                    <div class="row">
-                        <button class="waves-effect waves-light green btn modal-close">Нет</button>
-                        <button class="waves-effect waves-light red btn modal-close" type="submit">Да</button>
+                    <div class="modal-footer">
+                        <button type="button" class="waves-effect waves-light green btn modal-close">Нет</button>
+                        <button type="submit" class="waves-effect waves-light red btn modal-close">Да</button>
                         <input type="hidden" name="form_type" value="leave_event">
                     </div>
                 </form>
-            </div>
         </div>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
     <script>
-        $(document).ready(function() {
-        $('select').material_select();
-        });
+         $(document).ready(function(){
+                $('.modal').modal();
+          });
+        $('#modal').modal('open');
+        $('#modal').modal('close');
     </script>
     <script>
-        $(document).ready(function(){
-            $('.modal').modal();
+        $(document).ready(function() {
+        $('select').material_select();
         });
     </script>
     <script>

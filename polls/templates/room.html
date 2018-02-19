@@ -6,7 +6,7 @@
      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-    <nav class="#1565c0 blue darken-2">
+    <nav class="#1565c0 blue darken-4">
         <div class="nav-wrapper">
             <div class="brand-logo">&nbsp;&nbsp;&nbsp;Devent</div>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
@@ -58,7 +58,16 @@
                     <div class="collapsible-body">
                         <span>{{ event.cmt }}</span>
                         {% if admin %}}
-                            <i class="material-icons right delete-event tooltipped" data-position="top" data-delay="10" data-tooltip="Удалить">clear</i>
+                            <i href="#modal_del_event" class="material-icons right modal-trigger modal-open tooltipped" data-position="top" data-delay="10" data-tooltip="Удалить">clear</i>
+                            <div id="modal_del_event" class="modal">
+                                    <div class="modal-content">
+                                        <span>Вы уверены, что хотите удалить мероприятие {{event}}?</span>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="waves-effect waves-light btn modal-close green">Нет</button>
+                                        <button class="waves-effect waves-light btn modal-close red delete-event">Да</button>
+                                    </div>
+                                  </div>
                         {% endif %}
                         <br>
                         <a href="/accounts/event/{{event.id}}/">Подробнее>></a>
@@ -93,7 +102,7 @@
                 </select>
                 &nbsp;&nbsp;&nbsp;<label>Choose memebrs</label>
               </div>
-            &nbsp;&nbsp;&nbsp;&nbsp;<button class="waves-effect waves-light btn modal-close" type="submit"><i class="material-icons center">send</i></button>
+            &nbsp;&nbsp;&nbsp;&nbsp;<button class="waves-effect waves-light btn modal-close green" type="submit"><i class="material-icons center">send</i></button>
                 <input type="hidden" name="form_type" value="noti">
             </form>
             </div>
@@ -131,7 +140,7 @@
                         &nbsp;&nbsp;&nbsp;<label>Choose memebrs</label>
                   </div>
                 </div>
-                  &nbsp;&nbsp;&nbsp;&nbsp;<button class="waves-effect waves-light btn modal-close" type="submit">Создать</button>
+                  &nbsp;&nbsp;&nbsp;&nbsp;<button class="waves-effect waves-light btn modal-close green" type="submit">Создать</button>
                     <input type="hidden" name="form_type" value="event">
             </form>
             </div>
@@ -194,7 +203,7 @@
                         &nbsp;&nbsp;&nbsp;<label>Choose memebrs</label>
                   </div>
                 </div>
-                &nbsp;&nbsp;&nbsp;&nbsp;<input class="waves-effect waves-light btn modal-close" type="submit" value="Создать">
+                  &nbsp;&nbsp;&nbsp;&nbsp;<button class="waves-effect waves-light btn modal-close green" type="submit" >Создать</button>
                     <input type="hidden" name="form_type" value="task">
             </form>
             </div>
@@ -207,7 +216,16 @@
                   {% for item in data%}
                         <li data-room_id="{{room.id}}" data-member_id="{{item.1.id}}" class="member">
                             {% if admin %}
-                                <i class="material-icons right delete-member tooltipped" data-position="top" data-delay="10" data-tooltip="Удалить">clear</i>
+                                <i class="material-icons right tooltipped modal-trigger modal-open" href="#modal_del_member" data-position="top" data-delay="10" data-tooltip="Удалить">clear</i>
+                                <div id="modal_del_member" class="modal">
+                                    <div class="modal-content">
+                                        <span>Вы уверены, что хотите удалить пользователя {{item.1}} из комнаты?</span>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="waves-effect waves-light btn modal-close green">Нет</button>
+                                        <button class="waves-effect waves-light btn modal-close red delete-member">Да</button>
+                                    </div>
+                                  </div>
                             {% endif %}
                             <div class="collapsible-header">
                                 <a href="/accounts/member/{{item.1.id}}">{{item.1}}#id{{item.1.id}}</a>
@@ -216,7 +234,16 @@
                                 {% if admin %}
                                     {% for user_task in item.0 %}
                                         <div class="collection task" data-task_id="{{user_task.id}}">
-                                            <i class="material-icons right delete-task tooltipped"  data-position="top" data-delay="10" data-tooltip="Закрыть задание">check</i>
+                                            <i href="#modal_close_task{{user_task.id}}{{item.1.id}}" class="material-icons right modal-trigger modal-open tooltipped"  data-position="top" data-delay="10" data-tooltip="Закрыть задание">check</i>
+                                            <div id="modal_close_task{{user_task.id}}{{item.1.id}}" class="modal">
+                                                <div class="modal-content">
+                                                    <span>Снять задачу {{user_task}} с пользователя {{item.1}}?</span>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button class="waves-effect waves-light btn modal-close white"><font color="black">Нет</font></button>
+                                                    <button class="waves-effect waves-light btn modal-close green delete-task">Да</button>
+                                                </div>
+                                              </div>
                                             <a href="/accounts/task/{{user_task.id}}" class="collection-item">
                                                 {{user_task}}
                                                 <br>
@@ -249,7 +276,7 @@
                                                         </div>
                                                     </div>
                                                         <input type="hidden" value="{{item.1.id}}" name="member_id">
-                                                    &nbsp;&nbsp;&nbsp;&nbsp;<input class="waves-effect waves-light btn modal-close" type="submit" value="Создать">
+                                                      &nbsp;&nbsp;&nbsp;&nbsp;<button class="waves-effect waves-light btn modal-close green" type="submit">Создать</button>
                                                         <input type="hidden" name="form_type" value="task_on_user">
                                                 </form>
                                                 </div>
@@ -262,14 +289,23 @@
                   {% endfor %}
               </ul>
           </div>
-          <form method="post" id="add_user">
-            {% csrf_token %}
-            {% if admin %}
-                <input name="id_" class="collection-item">
-                <input type="submit" class="waves-effect waves-light btn green" value="Добавить"><font color="white">{{error}}</font>
-                <input type="hidden" name="form_type" value="add_user">
-            {% endif %}
-        </form>
+          {% if admin %}
+          <div class="card">
+              <div class="card-content">
+                  <span><font color="#a9a9a9">Добавление пользователя:</font></span>
+                    <input id="user_id" name="user_id" class="validate" placeholder="Введите id пользователя">
+                    <a data-room_id="{{room.id}}" class="material-icons add-member tooltipped"  data-position="right" data-delay="10" data-tooltip="Добавить пользователя">add</a>
+                    <div id="modal_add_user" class="modal">
+                        <div class="modal-content">
+                            <a href="/accounts/room/{{room.id}}" class="material-icons right modal-close">clear</a>
+                          <span>Пользователь успешно добавлен в комнату!</span>
+                        </div>
+                        <div class="modal-footer">
+                        </div>
+                      </div>
+              </div>
+          </div>
+           {% endif %}
       </div>
 
 
@@ -288,30 +324,23 @@
     {% endif %}
     </div>
     <div id="modalr" class="modal">
-            <div class="modal-content">
                 <form method="post" id="leave_room">
                     {% csrf_token %}
-                    <div align="center">
-                        <h4>Вы уверены, что хотите выйти из комнаты?</h4>
+                    <div class="modal-content">
+                        <span>Вы уверены, что хотите выйти из комнаты?</span>
                     </div>
-                    <div class="row" align="right">
-                        <button class="waves-effect waves-light green btn modal-close">Нет</button>
-                        <button class="waves-effect waves-light red btn modal-close" type="submit">Да</button>
+                    <div class="modal-footer">
+                        <button type="button" class="waves-effect waves-light green btn modal-close">Нет</button>
+                        <button type="submit" class="waves-effect waves-light red btn modal-close">Да</button>
                         <input type="hidden" name="form_type" value="leave_room">
                     </div>
                 </form>
-            </div>
         </div>
      <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
     <script>
-        $(document).ready(function(){
-                $('.modal').modal();
-          });
-    </script>
-    <script>
         $(document).ready(function() {
-        $('select').material_select();
+            $('select').material_select();
         });
     </script>
     <script>
@@ -323,15 +352,34 @@
          $(document).ready(function(){
                 $('.modal').modal();
           });
-        $('#modal').modal('open');
-        $('#modal').modal('close');
     </script>
 <script>
         $(".dropdown-button").dropdown();
+
+        $(".add-member").on('click', function () {
+            var $this = $(this);
+            var user_id = document.getElementById('user_id').value;
+            var room_id = $this.data('room_id');
+
+            $.ajax({
+                url: '/accounts/add_user/' + user_id + '/' + room_id,
+                success: function(res) {
+                    console.log(res);
+                    if (res == 1)
+                    {
+                        $("#modal_add_user").modal("open");
+                    }else{
+                        alert('Что-то пошло не так, попробуйте еще раз');
+                    }
+                }
+            })
+        })
+
         $('.delete-member').on('click', function(){
             var $this = $(this);
             var member_id = $this.parents('li.member').data('member_id');
             var room_id = $this.parents('li.member').data('room_id');
+
             $.ajax({
                 url: '/accounts/delete/' + member_id + '/' + room_id,
                 success: function(res){
@@ -344,6 +392,7 @@
                 }
             })
         })
+
         $('.delete-task').on('click', function (){
             var $this = $(this);
             var task_id = $this.parents('div.task').data('task_id');
