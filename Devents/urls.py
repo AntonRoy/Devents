@@ -38,4 +38,5 @@ urlpatterns = [
     path('accounts/delete_task/<int:member_id>/<int:task_id>', end_task),
     path('accounts/delete_event/<int:room_id>/<int:event_id>', end_event),
     path('accounts/add_user/<int:user_id>/<int:room_id>', add_user),
+    path('check_login/<str:login>', check_login),
 ]
