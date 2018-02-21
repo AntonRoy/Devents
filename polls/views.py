@@ -31,7 +31,7 @@ def sign_up(request):
         try:
             vk_id = url2vk_id(request.POST['VK'])
         except:
-            vk_id = 332943714
+            vk_id = -1
         password = request.POST['password']
         repassword = request.POST['repassword']
         if password == repassword:
@@ -65,7 +65,7 @@ def profile(request):
 
 def edit_user(request):
     user = request.user
-    if request.method=="POST":
+    if request.method == "POST":
         user.first_name = request.POST['first_name']
         user.last_name = request.POST['last_name']
         if request.POST['password'] != '' and request.POST['repassword'] != '':
@@ -160,7 +160,7 @@ def room(request, room_id):
                         day[1] = '0' + day[1]
             date = str(day[2] + '-' + day[1] + '-' + day[0] + ' ' + request.POST['time'])
         else:
-            return render(request, 'sign_up_event.html', {'error': 'Write both: time and date'})
+            return redirect("/accounts/room/{0}".format(room_id))
         try:
             members = list(map(lambda x: int(x), dict(request.POST)["members_send"]))
         except:
@@ -243,7 +243,7 @@ def room(request, room_id):
                         day[1] = '0' + day[1]
             date = str(day[2] + '-' + day[1] + '-' + day[0] + ' ' + request.POST['time'])
         else:
-            return render(request, 'sign_up_task.html', {'error': 'Write both: time and date'})
+            return redirect("/accounts/room/{0}".format(room_id))
         members = list(map(lambda x: int(x), dict(request.POST)["members_send"]))
         Event.objects.get_or_create(name=name, cmt=cmt, date=date, room=room, is_task=is_task)
         task = Event.objects.get(name=name)
@@ -280,7 +280,7 @@ def room(request, room_id):
                         day[1] = '0' + day[1]
             date = str(day[2] + '-' + day[1] + '-' + day[0] + ' ' + request.POST['time'])
         else:
-            return render(request, 'sign_up_event.html', {'error': 'Write both: time and date'})
+            return redirect("/accounts/room/{0}".format(room_id))
         member = Person.objects.get(id=request.POST['member_id'])
         members = [member]
         Event.objects.get_or_create(name=name, cmt=cmt, date=date, room=room, is_task=True)
@@ -354,8 +354,9 @@ def edit_room(request, room_id):
 
 def member(request, member_id):
     if request.method == "GET":
+        if request.user.id == member_id:
+            return redirect("/accounts/profile/")
         member = User.objects.get(id=member_id)
-
         return render(request, "member.html", {"member": member})
 
 
@@ -526,6 +527,13 @@ def edit_event(request, event_id):
 
 
 #ajax:
+
+def check_login(request, login):
+    users = list(Person.objects.all())
+    users = list(map(lambda x: x.login, users))
+    if login not in users:
+        return HttpResponse("1")
+    return HttpResponse("0")
 
 def add_user(request, user_id, room_id):
     room = Room.objects.get(id=room_id)
