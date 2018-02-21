@@ -5,17 +5,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
-<body bgcolor="#4682b4">
+<body >
     <nav class="#0277bd light-blue darken-2">
         <div class="nav-wrapper">
-            <div class="brand-logo">&nbsp;&nbsp;&nbsp;Devent</div>
+            <div class="brand-logo center">&nbsp;&nbsp;&nbsp;Devent</div>
         </div>
     </nav>
     <br><br><br><br><br>
     <div class="section container">
         <div class="row">
             <div class="col s12 m6 offset-m3">
-                <div class="card login-wrapper #0277bd light-blue darken-2">
+                <div class="card login-wrapper">
                     <form method="post">
                         <div class="card-content">
                                 {% csrf_token %}
@@ -33,13 +33,12 @@
         </div>
     </div>
         <h2><font color="red">{{error}}</font></h2>
-<script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script>
         $(document).ready(function() {
             Materialize.updateTextFields();
         });
     </script>
-    <!--Import jQuery before materialize.js-->
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
 </body>
 </html>

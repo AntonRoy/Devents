@@ -16,25 +16,32 @@
             </ul>
         </div>
     </nav>
+    <form method="post" id="edit_room">
+            {% csrf_token %}
      <div class="row">
         <div class="col s12 m1000">
           <div class="card">
             <div class="card-image">
+              <img src="{{ image_path }}">
             </div>
             <div class="card-content">
-              <h3>{{ room.name }}</h3>
-                <span>{{ room.cmt }}</span>
-            </div>
-            <div class="card-action">
-                {% if admin %}
-                    <a href="/accounts/edit_room/{{room.id}}">Редактировать</a>
-                    <a href="#modal3" class="modal-trigger modal-open">Отправить уведомление</a>
-                {% endif %}
+                <div class="row">
+                    <div align="center">
+                        <div class="input-field col s6">
+                          &nbsp;<input id="room_name" name="room_name" type="text" class="validate" value="{{room.name}}">
+                          <label for="room_name">Название комнаты</label>
+                        </div>
+                        <div class="input-field col s6">
+                            &nbsp;<input id="cmt" name="cmt" type="text" class="materialize-textarea validate" value="{{room.cmt}}">
+                          <label for="cmt">Описание</label>
+                        </div>
+                    </div>
+                </div>
             </div>
           </div>
         </div>
       </div>
-    <div class="card">
+        <div class="card">
     <div class="card-tabs">
       <ul class="tabs tabs-fixed-width">
         <li class="tab"><a class="active" href="#members"><i class="material-icons center">person</i></a></li>
@@ -58,16 +65,7 @@
                     <div class="collapsible-body">
                         <span>{{ event.cmt }}</span>
                         {% if admin %}}
-                            <i href="#modal_del_event" class="material-icons right modal-trigger modal-open tooltipped" data-position="top" data-delay="10" data-tooltip="Удалить">clear</i>
-                            <div id="modal_del_event" class="modal">
-                                    <div class="modal-content">
-                                        <span>Вы уверены, что хотите удалить мероприятие {{event}}?</span>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button class="waves-effect waves-light btn modal-close green">Нет</button>
-                                        <button class="waves-effect waves-light btn modal-close red delete-event">Да</button>
-                                    </div>
-                                  </div>
+                            <i class="material-icons right delete-event tooltipped" data-position="top" data-delay="10" data-tooltip="Удалить">clear</i>
                         {% endif %}
                         <br>
                         <a href="/accounts/event/{{event.id}}/">Подробнее>></a>
@@ -81,8 +79,6 @@
       </div>
         <div id="modal3" class="modal modal-fixed-footer">
             <div class="modal-content">
-          <form method="post" id="noti">
-            {% csrf_token %}
                     <div class="row">
                 <div class="col s12">
                   <div class="row">
@@ -102,17 +98,14 @@
                 </select>
                 &nbsp;&nbsp;&nbsp;<label>Choose memebrs</label>
               </div>
-            &nbsp;&nbsp;&nbsp;&nbsp;<button class="waves-effect waves-light btn modal-close green" type="submit"><i class="material-icons center">send</i></button>
+            &nbsp;&nbsp;&nbsp;&nbsp;<button class="waves-effect waves-light btn modal-close" type="submit"><i class="material-icons center">send</i></button>
                 <input type="hidden" name="form_type" value="noti">
-            </form>
             </div>
             <div class="modal-footer">
             </div>
           </div>
         <div id="modal1" class="modal modal-fixed-footer">
             <div class="modal-content">
-              <form method="post" id="event">
-                {% csrf_token %}
                 <p>&shy;&nbsp;&nbsp;</p>
                 <div align="center">
                     <div class="input-field col s6">
@@ -140,9 +133,8 @@
                         &nbsp;&nbsp;&nbsp;<label>Choose memebrs</label>
                   </div>
                 </div>
-                  &nbsp;&nbsp;&nbsp;&nbsp;<button class="waves-effect waves-light btn modal-close green" type="submit">Создать</button>
+                  &nbsp;&nbsp;&nbsp;&nbsp;<button class="waves-effect waves-light btn modal-close" type="submit">Создать</button>
                     <input type="hidden" name="form_type" value="event">
-            </form>
             </div>
             <div class="modal-footer">
             </div>
@@ -173,7 +165,6 @@
       </div>
         <div id="modal2" class="modal modal-fixed-footer">
             <div class="modal-content">
-              <form method="post" id="task">
                 {% csrf_token %}
                 <p>&shy;&nbsp;&nbsp;</p>
                 <div align="center">
@@ -203,9 +194,8 @@
                         &nbsp;&nbsp;&nbsp;<label>Choose memebrs</label>
                   </div>
                 </div>
-                  &nbsp;&nbsp;&nbsp;&nbsp;<button class="waves-effect waves-light btn modal-close green" type="submit" >Создать</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;<input class="waves-effect waves-light btn modal-close" type="submit" value="Создать">
                     <input type="hidden" name="form_type" value="task">
-            </form>
             </div>
             <div class="modal-footer">
             </div>
@@ -216,16 +206,7 @@
                   {% for item in data%}
                         <li data-room_id="{{room.id}}" data-member_id="{{item.1.id}}" class="member">
                             {% if admin %}
-                                <i class="material-icons right tooltipped modal-trigger modal-open" href="#modal_del_member" data-position="top" data-delay="10" data-tooltip="Удалить">clear</i>
-                                <div id="modal_del_member" class="modal">
-                                    <div class="modal-content">
-                                        <span>Вы уверены, что хотите удалить пользователя {{item.1}} из комнаты?</span>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button class="waves-effect waves-light btn modal-close green">Нет</button>
-                                        <button class="waves-effect waves-light btn modal-close red delete-member">Да</button>
-                                    </div>
-                                  </div>
+                                <i class="material-icons right delete-member tooltipped" data-position="top" data-delay="10" data-tooltip="Удалить">clear</i>
                             {% endif %}
                             <div class="collapsible-header">
                                 <a href="/accounts/member/{{item.1.id}}">{{item.1}}#id{{item.1.id}}</a>
@@ -234,16 +215,7 @@
                                 {% if admin %}
                                     {% for user_task in item.0 %}
                                         <div class="collection task" data-task_id="{{user_task.id}}">
-                                            <i href="#modal_close_task{{user_task.id}}{{item.1.id}}" class="material-icons right modal-trigger modal-open tooltipped"  data-position="top" data-delay="10" data-tooltip="Закрыть задание">check</i>
-                                            <div id="modal_close_task{{user_task.id}}{{item.1.id}}" class="modal">
-                                                <div class="modal-content">
-                                                    <span>Снять задачу {{user_task}} с пользователя {{item.1}}?</span>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button class="waves-effect waves-light btn modal-close white"><font color="black">Нет</font></button>
-                                                    <button class="waves-effect waves-light btn modal-close green delete-task">Да</button>
-                                                </div>
-                                              </div>
+                                            <i class="material-icons right delete-task tooltipped"  data-position="top" data-delay="10" data-tooltip="Закрыть задание">check</i>
                                             <a href="/accounts/task/{{user_task.id}}" class="collection-item">
                                                 {{user_task}}
                                                 <br>
@@ -255,8 +227,6 @@
                                     &nbsp;&nbsp;&nbsp;<a href="#modall{{item.1.id}}" class="btn-floating btn-large waves-effect waves-light yellow modal-trigger modal-open"><i class="material-icons">add</i></a>
                                         <div id="modall{{item.1.id}}" class="modal modal-fixed-footer">
                                                 <div class="modal-content">
-                                                  <form method="post" id="task_on_user">
-                                                    {% csrf_token %}
                                                       <div align="center">
                                                         <div class="input-field col s6">
                                                           &nbsp;<input id="task_name_on_user" name="task_name_on_user" type="text" class="validate">
@@ -276,9 +246,8 @@
                                                         </div>
                                                     </div>
                                                         <input type="hidden" value="{{item.1.id}}" name="member_id">
-                                                      &nbsp;&nbsp;&nbsp;&nbsp;<button class="waves-effect waves-light btn modal-close green" type="submit">Создать</button>
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;<input class="waves-effect waves-light btn modal-close" type="submit" value="Создать">
                                                         <input type="hidden" name="form_type" value="task_on_user">
-                                                </form>
                                                 </div>
                                                 <div class="modal-footer">
                                                 </div>
@@ -289,23 +258,11 @@
                   {% endfor %}
               </ul>
           </div>
-          {% if admin %}
-          <div class="card">
-              <div class="card-content">
-                  <span><font color="#a9a9a9">Добавление пользователя:</font></span>
-                    <input id="user_id" name="user_id" class="validate" placeholder="Введите id пользователя">
-                    <a data-room_id="{{room.id}}" class="material-icons add-member tooltipped"  data-position="right" data-delay="10" data-tooltip="Добавить пользователя">add</a>
-                    <div id="modal_add_user" class="modal">
-                        <div class="modal-content">
-                            <a href="/accounts/room/{{room.id}}" class="material-icons right modal-close">clear</a>
-                          <span>Пользователь успешно добавлен в комнату!</span>
-                        </div>
-                        <div class="modal-footer">
-                        </div>
-                      </div>
-              </div>
-          </div>
-           {% endif %}
+            {% if admin %}
+                <input name="id_" class="collection-item">
+                <input type="submit" class="waves-effect waves-light btn green" value="Добавить"><font color="white">{{error}}</font>
+                <input type="hidden" name="form_type" value="add_user">
+            {% endif %}
       </div>
 
 
@@ -318,31 +275,37 @@
       </div>
     </div>
   </div>
-    <div align="right">
-    {% if not admin %}
-        <a href="#modalr" class="btn-floating btn-large waves-effect waves-light red modal-trigger model-open"><i class="material-icons">remove_circle_outline</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-    {% endif %}
+    <div class="row">
+    <div class="col s12 m1000">
+      <div class="card">
+        <div class="card-image">
+        </div>
+        <div class="card-content">
+            <button class="btn green" type="submit">Сохранить изменения</button>
+            <input type="hidden" name="form_type" value="edit_room">
+            <a href="#delete_room_modal" class="right btn-floating btn-large waves-effect waves-light red modal-trigger model-open"><i class="material-icons">delete</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <br>
+            &nbsp;
+        </div>
+      </div>
     </div>
-    <div id="modalr" class="modal">
-                <form method="post" id="leave_room">
-                    {% csrf_token %}
-                    <div class="modal-content">
-                        <span>Вы уверены, что хотите выйти из комнаты?</span>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="waves-effect waves-light green btn modal-close">Нет</button>
-                        <button type="submit" class="waves-effect waves-light red btn modal-close">Да</button>
-                        <input type="hidden" name="form_type" value="leave_room">
-                    </div>
-                </form>
+  </div>
+    </form>
+        <div id="delete_room_modal" class="modal">
+            <form method="post" id="delete_room">
+                {% csrf_token %}
+                <div class="modal-content">
+                    <span>Вы уверены, что хотите удалить комнату?</span>
+                </div>
+                <div class="modal-footer">
+                    <button class="waves-effect waves-light green btn modal-close">Нет</button>
+                    <button class="waves-effect waves-light red btn modal-close" type="submit">Да</button>
+                    <input type="hidden" name="form_type" value="delete_room">
+                </div>
+            </form>
         </div>
      <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('select').material_select();
-        });
-    </script>
     <script>
          $(document).ready(function(){
             $('.collapsible').collapsible();
@@ -353,102 +316,29 @@
                 $('.modal').modal();
           });
     </script>
+    <script>
+        $('.fixed-action-btn').openFAB();
+        $('.fixed-action-btn').closeFAB();
+        $('.fixed-action-btn.toolbar').openToolbar();
+        $('.fixed-action-btn.toolbar').closeToolbar()
+    </script>
 <script>
         $(".dropdown-button").dropdown();
-
-        $(".add-member").on('click', function () {
+        $('.delete-item').on('click', function(){
             var $this = $(this);
-            var user_id = document.getElementById('user_id').value;
-            var room_id = $this.data('room_id');
-
+            var _id = $this.parents('li.member').data('id');
             $.ajax({
-                url: '/accounts/add_user/' + user_id + '/' + room_id,
-                success: function(res) {
-                    console.log(res);
-                    if (res == 1)
-                    {
-                        $("#modal_add_user").modal("open");
-                    }else{
-                        alert('Что-то пошло не так, попробуйте еще раз');
-                    }
-                }
-            })
-        })
-
-        $('.delete-member').on('click', function(){
-            var $this = $(this);
-            var member_id = $this.parents('li.member').data('member_id');
-            var room_id = $this.parents('li.member').data('room_id');
-
-            $.ajax({
-                url: '/accounts/delete/' + member_id + '/' + room_id,
+                url: '/URL/admin/delete/' + _id,
                 success: function(res){
                     console.log(res);
                     if (res == 1){
                         $this.parents('li.member').remove()
                     }else{
-                        alert('Что-то пошло не так, попробуйте еще раз');
+                        alert('ERROR');
                     }
                 }
             })
         })
-
-        $('.delete-task').on('click', function (){
-            var $this = $(this);
-            var task_id = $this.parents('div.task').data('task_id');
-            var member_id = $this.parents('li.member').data('member_id');
-            $.ajax({
-                url: '/accounts/delete_task/' + member_id + '/' + task_id,
-                success: function (res) {
-                    console.log(res);
-                    if (res == 1) {
-                        $this.parents('div.task').remove()
-                    } else{
-                        alert('Что-то пошло не так, попробуйте еще раз')
-                    }
-                }
-            })
-        })
-        $('.delete-event').on('click', function () {
-            var $this = $(this);
-            var event_id = $this.parents('li.event').data('event_id');
-            var room_id = $this.parents('li.event').data('room_id');
-            $.ajax({
-                url: '/accounts/delete_event/' + room_id + '/' + event_id,
-                success: function (res) {
-                    console.log(res);
-                    if (res == 1)
-                    {
-                        $this.parents('li.event').remove()
-                    } else{
-                        alert('Что-то пошло не так, попробуйте еще раз')
-                    }
-                }
-            })
-        })
-    </script>
-    <script>
-        $('.datepicker').pickadate({
-            selectMonths: true, // Creates a dropdown to control month
-            selectYears: 15, // Creates a dropdown of 15 years to control year,
-            today: 'Today',
-            clear: 'Clear',
-            close: 'Ok',
-            closeOnSelect: false // Close upon selecting a date,
-          });
-    </script>
-    <script>
-         $('.timepicker').pickatime({
-            default: 'now', // Set default time: 'now', '1:30AM', '16:30'
-            fromnow: 0,       // set default time to * milliseconds from now (using with default = 'now')
-            twelvehour: false, // Use AM/PM or 24-hour format
-            donetext: 'OK', // text for done-button
-            cleartext: 'Clear', // text for clear-button
-            canceltext: 'Cancel', // Text for cancel-button
-            autoclose: false, // automatic close timepicker
-            ampmclickable: true, // make AM PM clickable
-            aftershow: function(){} //Function for after opening timepicker
-          });
     </script>
 </body>
 </html>

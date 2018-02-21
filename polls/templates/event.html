@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-    <nav class="#1565c0 blue darken-4">
+    <nav class="#0277bd light-blue darken-2">
         <div class="nav-wrapper">
             <div class="brand-logo">&nbsp;&nbsp;&nbsp;Devent</div>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
@@ -85,7 +85,7 @@
                   </div>
                 </div>
               </div>
-              {% if admin and new_memebers%}
+              {% if admin %}
                 <div class="card">
                     <div class="card-content">
                         <form method="post" id="add">
@@ -129,14 +129,14 @@
     </table>
     <div align="right">
     {% if not event.is_task %}
-        <a href="#leave_modal" class="btn-floating btn-large waves-effect waves-light red  modal-trigger model-open"><i class="material-icons">remove_circle_outline</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="#leave_modal" class="btn-floating btn-large waves-effect waves-light red  modal-trigger model-open tooltipped" data-position="top" data-delay="10" data-tooltip="Выйти из мероприятия"><i class="material-icons">remove_circle_outline</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
     {% endif %}
     </div>
     <div id="leave_modal" class="modal">
                 <form method="post" id="leave_event">
                     {% csrf_token %}
                     <div class="modal-content">
-                        <span>Вы уверены, что хотите выйти из комнаты?</span>
+                        <span>Вы уверены, что хотите выйти из мероприятия?</span>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="waves-effect waves-light green btn modal-close">Нет</button>

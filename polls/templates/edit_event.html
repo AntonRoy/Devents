@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<head>
+    <title>Devent</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <meta charset="UTF-8">
+</head>
+<body>
+    <nav class="#0277bd light-blue darken-2">
+        <div class="nav-wrapper">
+            <div class="brand-logo">&nbsp;&nbsp;&nbsp;Devent</div>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="/accounts/profile" class="top">Профиль</a></li>
+                <li><a href="/accounts/sign_up_room" class="top">Создать комнату</a></li>
+                <li><a href="/login">Выйти</a></li>
+            </ul>
+        </div>
+    </nav>
+    <form method="post">
+        {% csrf_token %}
+        <p>&shy;&nbsp;&nbsp;</p>
+        <div align="center">
+            <div class="input-field col s6">
+              &nbsp;<input id="event_name" name="event_name" type="text" class="validate" value="{{event.name}}">
+              <label for="event_name">Event name</label>
+            </div>
+            <div class="input-field col s6">
+              &nbsp;<input id="discription" name="discription" type="text" class="validate" value="{{event.cmt}}">
+              <label for="discription">Discription</label>
+            </div>
+            <div class="input-field col s6">
+              &nbsp<input id="date" type="text" class="datepicker" name="data">
+              <label for="date">Date (previous {{event.date}})</label>
+            </div>
+            <div class="input-field col s6">
+              &nbsp<input id="time" type="text" class="timepicker" name="time">
+              <label for="time">Time</label>
+            </div>
+        </div>
+        &nbsp;&nbsp;&nbsp;&nbsp;<input class="waves-effect waves-light btn" type="submit" value="Отредактировать">
+    </form>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script>
+        $('.datepicker').pickadate({
+            selectMonths: true, // Creates a dropdown to control month
+            selectYears: 15, // Creates a dropdown of 15 years to control year,
+            today: 'Today',
+            clear: 'Clear',
+            close: 'Ok',
+            closeOnSelect: false // Close upon selecting a date,
+          });
+    </script>
+    <script>
+         $('.timepicker').pickatime({
+            default: 'now', // Set default time: 'now', '1:30AM', '16:30'
+            fromnow: 0,       // set default time to * milliseconds from now (using with default = 'now')
+            twelvehour: false, // Use AM/PM or 24-hour format
+            donetext: 'OK', // text for done-button
+            cleartext: 'Clear', // text for clear-button
+            canceltext: 'Cancel', // Text for cancel-button
+            autoclose: false, // automatic close timepicker
+            ampmclickable: true, // make AM PM clickable
+            aftershow: function(){} //Function for after opening timepicker
+          });
+    </script>
+    <script>
+        $(document).ready(function() {
+        $('select').material_select();
+        });
+    </script>
+</body>
+</html>
