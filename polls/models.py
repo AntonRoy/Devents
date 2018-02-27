@@ -8,10 +8,9 @@ class Person(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='person')
     id = models.AutoField(primary_key=True)
     img = models.ImageField(default="default.jpeg", blank=True)
-    vk_id = models.CharField(max_length=40, null=True, blank=True)
-    tg_id = models.CharField(max_length=40, null=True, blank=True)
+    vk_id = models.CharField(max_length=100, null=True, blank=True)
     def __str__(self):
-        return self.user.username
+        return self.user.first_name + self.user.last_name
 
 
 class Room(models.Model):
