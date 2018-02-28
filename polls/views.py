@@ -5,8 +5,7 @@ from django.contrib.auth import authenticate
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from vkplus import *
-import vk_settings, tg_settings
-import telepot
+import vk_settings
 import code
 from datetime import *
 
@@ -33,20 +32,55 @@ def sign_up(request):
             vk_id = url2vk_id(request.POST['VK'])
         except:
             vk_id = -1
-        tg_id = request.POST['TG']
         password = request.POST['password']
         repassword = request.POST['repassword']
         if password == repassword:
             try:
                 user = User.objects.create_user(username=login, password=password, email=login, first_name=name,
                                                 last_name=lastname)
-                Person.objects.get_or_create(user=user, vk_id=vk_id, tg_id=tg_id)
+                Person.objects.get_or_create(user=user, vk_id=vk_id)
                 return redirect("/login/")
             except:
                 return render(request, 'sign_up.html', {'error': 'Cуществует пользователь с таким же логином'})
         else:
             return render (request, 'sign_up.html', {'error': 'Пароли не совпадают'})
     return render (request, 'sign_up.html', {'error': ' '})
+
+
+def add_user(request, room_id):
+    if request.method == 'POST':
+        name = request.POST['name']
+        last_name = request.POST['lastname']
+        id_ = request.POST['id']
+        grade = request.POST['grade']
+        let = request.POST['let']
+        users = list(Person.objects.all())
+        if name:
+            users = [user if user.user.first_name == name else "" for user in users]
+        if last_name:
+            users = [user if user and user.user.last_name == last_name else "" for user in users]
+        if id_:
+            users = [user if user and user.id == int(id_) else "" for user in users]
+        '''
+        if grade:
+            params['grade'] = grade
+        if let:
+            params['letter'] = let
+        '''
+        members = []
+        room = Room.objects.get(id=room_id)
+        room_members = set(list(room.users.all()) + list(room.admins.all()))
+        for user in users:
+            if user and (user not in room_members):
+                members.append((user.id, user.user.first_name, user.user.last_name, '-', '-'))
+        return render(request, 'add_user.html', {'c': range(1, 12),
+                                                 'room_id': room_id,
+                                                 'letters': ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Н', 'М'],
+                                                 'members': members})
+
+    return render(request, 'add_user.html', {'c' : range(1, 12),
+                                             'room_id': room_id,
+                                             'letters': ['А', 'Б', 'В', 'Г' , 'Д', 'Е', 'Н', 'М']})
 
 
 def profile(request):
@@ -174,16 +208,12 @@ def room(request, room_id):
             users_send = list(event.users.all())
             text = "Новое мероприятие {0} в группе {1}".format(event.name, room.name)
             vk = VkPlus(vk_settings.token)
-            tg = telepot.Bot(tg_settings.token)
             for user_ in users_send:
                 try:
                     vk.send(
                         message=text + "\n" + "//Отправлено через приложение DEVENT//",
                         user_id=int(user_.vk_id)
                     )
-                    if user_.tg_id:
-                        tg.sendMessage(user_.tg_id,
-                                       text + "\n" + "//Отправлено через приложение DEVENT//")
                 except:
                     pass
         except:
@@ -194,7 +224,6 @@ def room(request, room_id):
         room = Room.objects.get(id=room_id)
         try:
             vk = VkPlus(vk_settings.token)
-            tg = telepot.Bot(tg_settings.token)
         except:
             return render(request, "result.html",
                           {'text': "При отправке уведомления возникла ошибка, проверьте подключение к интернету!",
@@ -213,9 +242,6 @@ def room(request, room_id):
                             room.name),
                         user_id=int(user_.vk_id)
                     )
-                    if user_.tg_id:
-                        tg.sendMessage(user_.tg_id, text + "\n" + "//Отправлено пользователем {0} {1}".format(request.user.first_name,
-                                                                                          request.user.last_name) + " из комнаты {0} через приложение DEVENT//".format(room.name))
                 except:
                     er_users.append(user_.id)
         for i in range(len(er_users)):
@@ -262,16 +288,12 @@ def room(request, room_id):
             users_send = list(task.users.all())
             text = "У вас новая задача {0}".format(task.name)
             vk = VkPlus(vk_settings.token)
-            tg = telepot.Bot(tg_settings.token)
             for user_ in users_send:
                 try:
                     vk.send(
                         message=text + "\n" + "//Отправлено через приложение DEVENT//",
                         user_id=int(user_.vk_id)
                     )
-                    if user_.tg_id:
-                        tg.sendMessage(user_.tg_id,
-                                       text + "\n" + "//Отправлено через приложение DEVENT//")
                 except:
                     pass
         except:
@@ -304,16 +326,12 @@ def room(request, room_id):
             users_send = [member]
             text = "У вас новая задача {0}".format(task.name)
             vk = VkPlus(vk_settings.token)
-            tg = telepot.Bot(tg_settings.token)
             for user_ in users_send:
                 try:
                     vk.send(
                         message=text + "\n" + "//Отправлено через приложение DEVENT//",
                         user_id=int(user_.vk_id)
                     )
-                    if user_.tg_id:
-                        tg.sendMessage(user_.tg_id,
-                                       text + "\n" + "//Отправлено через приложение DEVENT//")
                 except:
                     pass
         except:
@@ -426,7 +444,6 @@ def event(request, event_id):
         room = Room.objects.get(id=room_id)
         try:
             vk = VkPlus(vk_settings.token)
-            tg = telepot.Bot(tg_settings.token)
         except:
             return render(request, "result.html",
                           {'text': "При отправке уведомления возникла ошибка, проверьте подключение к интернету!",
@@ -445,11 +462,6 @@ def event(request, event_id):
                             room.name),
                         user_id=int(user_.vk_id)
                     )
-                    if user_.tg_id:
-                        tg.sendMessage(user_.tg_id,
-                                       text + "\n" + "//Отправлено пользователем {0} {1}".format(
-                                           request.user.first_name,
-                                           request.user.last_name) + " из комнаты {0} через приложение DEVENT//".format(room.name))
                 except:
                     er_users.append(user_.id)
         for i in range(len(er_users)):
@@ -559,7 +571,8 @@ def check_login(request, login):
         return HttpResponse("1")
     return HttpResponse("0")
 
-def add_user(request, user_id, room_id):
+
+def add_one_user(request, user_id, room_id):
     room = Room.objects.get(id=room_id)
     id_ = user_id
     users = list(room.users.all())
@@ -574,7 +587,6 @@ def add_user(request, user_id, room_id):
     try:
         text = "Пользователь {0} успешно добавлен в комнату {1}".format(member, room.name)
         vk = VkPlus(vk_settings.token)
-        tg = telepot.Bot(tg_settings.token)
         for user_ in users_send:
             try:
                 vk.send(
@@ -582,14 +594,12 @@ def add_user(request, user_id, room_id):
                         room.name),
                     user_id=int(user_.vk_id)
                 )
-                if user_.tg_id:
-                    tg.sendMessage(user_.tg_id,
-                                   text + "\n" + "//Отправлено через приложение DEVENT//".format(room.name))
             except:
                 pass
     except:
         pass
     return HttpResponse("1")
+
 
 def delete_user_from_room(request, member_id, room_id):
     room = Room.objects.get(id=room_id)
@@ -604,7 +614,6 @@ def delete_user_from_room(request, member_id, room_id):
         try:
             text = "Пользователь {0} успешно удален из комнаты {1}".format(member, room.name)
             vk = VkPlus(vk_settings.token)
-            tg = telepot.Bot(tg_settings.token)
             for user_ in users_send:
                 try:
                     vk.send(
@@ -612,9 +621,6 @@ def delete_user_from_room(request, member_id, room_id):
                             room.name),
                         user_id=int(user_.vk_id)
                     )
-                    if user_.tg_id:
-                        tg.sendMessage(user_.tg_id,
-                                       text + "\n" + "//Отправлено через приложение DEVENT//".format(room.name))
                 except:
                     pass
         except:
@@ -638,16 +644,12 @@ def end_task(request, member_id, task_id):
             users_send = [member]
             text = "Вы успешно выполнили задачу {0}".format(task.name)
             vk = VkPlus(vk_settings.token)
-            tg = telepot.Bot(tg_settings.token)
             for user_ in users_send:
                 try:
                     vk.send(
                         message=text + "\n" + "//Отправлено через приложение DEVENT//",
                         user_id=int(user_.vk_id)
                     )
-                    if user_.tg_id:
-                        tg.sendMessage(user_.tg_id,
-                                       text + "\n" + "//Отправлено через приложение DEVENT//")
                 except:
                     pass
         except:
