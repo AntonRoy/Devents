@@ -31,12 +31,13 @@ urlpatterns = [
     path('accounts/event/<int:event_id>/', event),
     path('accounts/task/<int:task_id>/', task),
     path('accounts/sign_up_room/', sign_up_room),
+    path('accounts/room/<int:room_id>/add_user', add_user),
     path('login/', login, {'template_name': 'main.html'}, name="main"),
 
     #ajax:
     path('accounts/delete/<int:member_id>/<int:room_id>', delete_user_from_room),
     path('accounts/delete_task/<int:member_id>/<int:task_id>', end_task),
     path('accounts/delete_event/<int:room_id>/<int:event_id>', end_event),
-    path('accounts/add_user/<int:user_id>/<int:room_id>', add_user),
+    path('accounts/add_user/<int:user_id>/<int:room_id>', add_one_user),
     path('check_login/<str:login>', check_login),
 ]
