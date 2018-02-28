@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<head xmlns="http://www.w3.org/1999/html">
+    <title>Devents</title>
+    <meta charset="UTF-8">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <nav class="#0277bd light-blue darken-2">
+        <div class="nav-wrapper">
+            <div class="brand-logo">&nbsp;&nbsp;&nbsp;Devent</div>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="/accounts/room/{{ room_id }}">Вернуться в комнату</a></li>
+                <li><a href="/accounts/profile" class="top">Профиль</a></li>
+                <li><a href="/accounts/sign_up_room" class="top">Создать комнату</a></li>
+                <li><a href="/login">Выйти</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="row">
+        <div class="col s6">
+                <br>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="input-field col s6">
+                          &nbsp;<input id="name" name="name" type="text" class="validate check">
+                          <label for="name">Имя<font color="red"></font></label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s6">
+                          &nbsp;<input id="lastname" name="lastname" type="text" class="validate check">
+                          <label for="lastname">Фамилия<font color="red"></font></label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s6">
+                          &nbsp;<input id="id" name="id" type="text" class="validate check">
+                          <label for="id">ID пользователя<font color="red"></font></label>
+                        </div>
+                    </div>
+                    &nbsp;<button type="submit" class="btn green">Поиск</button>
+                    <br>
+                    <br>
+                    &nbsp;&nbsp;<a class="new">Расширенный поиск</a>
+                    <div id="news" class="row" style="visibility: hidden">
+                            <div class="input-field col s12">
+                                <select name="grade">
+                                    <option value="-">Выберите номер класса</option>
+                                    {% for num in c%}
+                                        <option value="{{ num }}">{{num}}</option>
+                                    {% endfor %}
+                                </select>
+                                <label>Класс</label>
+                            </div>
+                             <div class="input-field col s12">
+                             <option value="-">Выберите букву класса</option>
+                                <select name="let">
+                                    {% for i in letters%}
+                                        <option value="{{ i }}">{{i}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                    </div>
+                </form>
+        </div>
+        <div class="col s6">
+            <br>
+                <table align="left">
+                    <thead>
+                      <tr>
+                          <th>ID</th>
+                          <th>Имя</th>
+                          <th>Фамилия</th>
+                          <th>Класс</th>
+                          <th>Буква</th>
+                          <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for member in members %}
+                          <tr>
+                            <td>{{ member.0 }}</td>
+                            <td>{{ member.1 }}</td>
+                            <td>{{ member.2 }}</td>
+                            <td>{{ member.3 }}</td>
+                            <td>{{ member.4 }}</td>
+                            <th>
+
+                            <a class="add-member tooltipped" data-member_id="{{ member.0 }}" data-room_id="{{ room_id }}" data-position="top" data-delay="10" data-tooltip="Добавить">
+                                <i id="icon{{ member.0 }}1" style="visibility:" class="material-icons" >add</i>
+                            </a>
+                                <a><i id="icon{{ member.0 }}2" style="visibility: hidden" class="material-icons">check</i></a>
+                            </th>
+                          </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+        </div>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('select').material_select();
+          });
+    </script>
+    <script>
+        $(".add-member").on('click', function () {
+            var $this = $(this);
+            var user_id = $this.data('member_id');
+            var room_id = $this.data('room_id');
+            $.ajax({
+                url: '/accounts/add_user/' + user_id + '/' + room_id,
+                success: function(res) {
+                    console.log(res);
+                    if (res == 1)
+                    {
+                        icon1 = document.getElementById('icon' + user_id + "1");
+                        icon2 = document.getElementById('icon' + user_id + "2");
+                        icon1.style.visibility = "hidden";
+                        icon2.style.visibility = "";
+                    }else{
+                        alert('Что-то пошло не так, попробуйте еще раз');
+                    }
+                }
+            })
+        })
+    </script>
+    <script>
+        $('.new').on('click', function () {
+            var $this = $(this);
+            var news = document.getElementById("news");
+            if (news.style.visibility === "hidden")
+            {
+                news.style.visibility = "";
+            }
+            else
+            {
+                news.style.visibility = "hidden";
+            }
+        })
+    </script>
+    <script>
+        $(".dropdown-button").dropdown();
+    </script>
+</body>
+</html>

@@ -292,17 +292,7 @@
           {% if admin %}
           <div class="card">
               <div class="card-content">
-                  <span><font color="#a9a9a9">Добавление пользователя:</font></span>
-                    <input id="user_id" name="user_id" class="validate" placeholder="Введите id пользователя">
-                    <a data-room_id="{{room.id}}" class="material-icons add-member tooltipped"  data-position="right" data-delay="10" data-tooltip="Добавить пользователя">add</a>
-                    <div id="modal_add_user" class="modal">
-                        <div class="modal-content">
-                            <a href="/accounts/room/{{room.id}}" class="material-icons right modal-close">clear</a>
-                          <span>Пользователь успешно добавлен в комнату!</span>
-                        </div>
-                        <div class="modal-footer">
-                        </div>
-                      </div>
+                  <a href="/accounts/room/{{ room.id }}/add_user" class="btn green">Добавить пользователей</a>
               </div>
           </div>
            {% endif %}
