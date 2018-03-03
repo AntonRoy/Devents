@@ -77,10 +77,18 @@ def add_user(request, room_id):
                                                  'room_id': room_id,
                                                  'letters': ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Н', 'М'],
                                                  'members': members})
-
-    return render(request, 'add_user.html', {'c' : range(1, 12),
-                                             'room_id': room_id,
-                                             'letters': ['А', 'Б', 'В', 'Г' , 'Д', 'Е', 'Н', 'М']})
+    if request.method == "GET":
+        users = set(list(Person.objects.all()))
+        room = Room.objects.get(id=room_id)
+        room_users = set(list(room.users.all()))
+        users = list(users - room_users)
+        members = []
+        for user in users:
+            members.append((user.id, user.user.first_name, user.user.last_name, '-', '-'))
+        return render(request, 'add_user.html', {'c' : range(1, 12),
+                                                'room_id': room_id,
+                                                 'members': members,
+                                                'letters': ['А', 'Б', 'В', 'Г' , 'Д', 'Е', 'Н', 'М']})
 
 
 def profile(request):
@@ -99,24 +107,29 @@ def profile(request):
                    'tasks': tasks,
                    'groups': list(user.person.agroups.all()) + list(user.person.ugroups.all())})
 
+
 def edit_user(request):
     user = request.user
     if request.method == "POST":
         user.first_name = request.POST['first_name']
         user.last_name = request.POST['last_name']
         if request.POST['password'] != '' and request.POST['repassword'] != '':
-            if request.POST['password']==request.POST['repassword']:
+            if request.POST['password'] == request.POST['repassword']:
                 user.set_password(request.POST['password'])
+                user.save()
+                return redirect('/login')
             else:
                 return render(request, 'edit_user.html', {'error': 'Пароли не совпадают',
                                                           'events': list(user.person.events.filter(is_task=0)),
                                                           'tasks': list(user.person.events.filter(is_task=1)),
-                                                          'groups': list(user.person.agroups.all()) + list(user.person.ugroups.all())})
+                                                          'groups': list(user.person.agroups.all()) + list(
+                                                              user.person.ugroups.all())})
         user.save()
         return redirect('/accounts/profile')
     return render(request, 'edit_user.html', {'user': user, 'events': list(user.person.events.filter(is_task=0)),
                                               'tasks': list(user.person.events.filter(is_task=1)),
-                                              'groups': list(user.person.agroups.all())+list(user.person.ugroups.all())})
+                                              'groups': list(user.person.agroups.all()) + list(
+                                                  user.person.ugroups.all())})
 
 
 def sign_up_room(request):
