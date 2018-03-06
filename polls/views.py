@@ -24,11 +24,10 @@ def main(request):
 
 
 def goto(request):
-    try:
-        id_ = request.user.id
+    id_ = request.user.id
+    if id != None:
         return redirect('/accounts/member/{0}'.format(id_))
-    except:
-        return redirect('/login')
+    return redirect('/login')
 
 
 def sign_up(request):
