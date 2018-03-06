@@ -23,6 +23,14 @@ def main(request):
     return render(request, 'main.html', {'error': " "})
 
 
+def goto(request):
+    try:
+        id_ = request.user.id
+        return redirect('/accounts/member/{0}'.format(id_))
+    except:
+        return redirect('/login')
+
+
 def sign_up(request):
     if request.method == 'POST':
         name = request.POST['name']
