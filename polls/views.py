@@ -25,6 +25,7 @@ def main(request):
 
 def goto(request):
     id_ = request.user.id
+    code.interact(local=locals())
     if id != None:
         return redirect('/accounts/member/{0}'.format(id_))
     return redirect('/login')
