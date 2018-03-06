@@ -33,6 +33,7 @@ urlpatterns = [
     path('accounts/sign_up_room/', sign_up_room),
     path('accounts/room/<int:room_id>/add_user', add_user),
     path('login/', login, {'template_name': 'main.html'}, name="main"),
+    path('', goto),
 
     #ajax:
     path('accounts/delete/<int:member_id>/<int:room_id>', delete_user_from_room),
