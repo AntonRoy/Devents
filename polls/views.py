@@ -120,6 +120,12 @@ def edit_user(request):
     if request.method == "POST":
         user.first_name = request.POST['first_name']
         user.last_name = request.POST['last_name']
+        vk = request.POST['VK']
+        if vk:
+            try:
+                user.person.vk_id = url2vk_id(vk)
+            except:
+                pass
         if request.POST['password'] != '' and request.POST['repassword'] != '':
             if request.POST['password'] == request.POST['repassword']:
                 user.set_password(request.POST['password'])
