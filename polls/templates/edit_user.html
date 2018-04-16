@@ -35,101 +35,27 @@
                       <label for="last_name">Фамилия</label>
                     </div>
                 </div>
-                &nbsp;
-                <a href="/accounts/profile"><font size="4">#id{{user.person.id}}</font></a>
-            </div>
-          </div>
-        </div>
-      </div>
-        <div class="row">
-        <div class="col s12 m1000">
-          <div class="card">
-            <div class="card-image">
-            </div>
-            <div class="card-content">
-                    <div class="row">
-                        <div class="input-field col s6">
-                          &nbsp;<input id="password" name="password" type="password" class="validate">
-                          <label for="password">Новый пароль</label>
-                        </div>
-                        <div class="input-field col s6">
-                          &nbsp;<input id="repassword" name="repassword" type="password" class="validate">
-                          <label for="repassword">Повторите новый пароль</label>
-                        </div>
+                <div class="row">
+                    <div class="input-field col s6">
+                      &nbsp;<input id="VK" name="VK" type="text" class="validate">
+                        <label for="first_name">Страница ВКонтакте</label>
                     </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s6">
+                      &nbsp;<input id="password" name="password" type="password" class="validate">
+                      <label for="password">Новый пароль</label>
+                    </div>
+                    <div class="input-field col s6">
+                      &nbsp;<input id="repassword" name="repassword" type="password" class="validate">
+                      <label for="repassword">Повторите новый пароль</label>
+                    </div>
+                </div>
             </div>
           </div>
         </div>
       </div>
         <h4>{{error}}</h4>
-    <div class="card">
-    <div class="card-tabs">
-      <ul class="tabs tabs-fixed-width">
-        <li class="tab"><a class="active" href="#tasks">Задачи</a></li>
-        <li class="tab"><a href="#events">Мероприятия</a></li>
-        <li class="tab"><a href="#groups"><i class="material-icons center">group</i></a></li>
-      </ul>
-    </div>
-    <div class="card-content grey lighten-4">
-      <div id="events">
-          <ul class="collapsible" data-collapsible="accordion">
-            {% for event in events%}
-                <li>
-                    <div class="collapsible-header">
-                        <a>
-                            {{event}}#id{{event.id}}
-                            <br>
-                            <i class="material-icons">alarm</i>{{event.date}}
-                        </a>
-                    </div>
-                    <div class="collapsible-body">
-                        <span>{{ event.cmt }}</span>
-                        <br>
-                        <a href="/accounts/event/{{event.id}}">Подробнее>></a>
-                    </div>
-                </li>
-            {% endfor %}
-          </ul>
-      </div>
-      <div id="tasks">
-          <ul class="collapsible" data-collapsible="accordion">
-            {% for task in tasks%}
-                <li>
-                    <div class="collapsible-header">
-                        <a>
-                            {{task}}#id{{task.id}}
-                            <br>
-                            <i class="material-icons">alarm</i>{{task.date}}
-                        </a>
-                    </div>
-                    <div class="collapsible-body">
-                        <span>{{ task.cmt }}</span>
-                        <br>
-                        <a href="/accounts/task/{{task.id}}">Подробнее>></a>
-                    </div>
-                </li>
-            {% endfor %}
-          </ul>
-      </div>
-      <div id="groups">
-          <ul class="collapsible" data-collapsible="accordion">
-            {% for group in groups%}
-                <li class="collection-item">
-                    <div class="collapsible-header">
-                        <a>{{group}}</a>
-                        <i class="material-icons red logout-from">clear</i>
-                    </div>
-                    <div class="collapsible-body">
-                        <span>{{group.cmt}}</span>
-                        <br><br>
-                        <a href="/accounts/room/{{group.id}}/">Перейти в комнату>></a>
-                    </div>
-                </li>
-            {% endfor %}
-          </ul>
-      </div>
-    </div>
-  </div>
         <div class="row">
         <div class="col s12 m1000">
           <div class="card">
@@ -150,7 +76,6 @@
             var $this=$(this)
 
     </script>
-<!--Import jQuery before materialize.js-->
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
 </body>
