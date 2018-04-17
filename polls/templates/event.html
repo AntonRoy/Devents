@@ -31,39 +31,7 @@
             </div>
             <div class="card-action">
                 {% if admin == 1 %}
-                    <a href="/accounts/edit_event/{{event.id}}/">Редактировать</a>
-                    <a href="#modal_noti" class="modal-trigger modal-open">Отправить уведомление</a>
-                    <div id="modal_noti" class="modal modal-fixed-footer">
-                        <div class="modal-content">
-                      <form method="post" id="noti">
-                        {% csrf_token %}
-                                <div class="row">
-                            <div class="col s12">
-                              <div class="row">
-                                <div class="input-field col s6">
-                                  <i class="material-icons prefix">message</i>
-                                  <textarea name="message" id="icon_prefix2" class="materialize-textarea"></textarea>
-                                  <label for="icon_prefix2">Message</label>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        <div class="input-field col s6 m6">
-                            <select multiple name="members_send">
-                                {% for member in members%}
-                                    &nbsp;&nbsp;&nbsp;<option selected="true" value="{{member.id}}">{{member}}</option>
-                                {%endfor%}
-                            </select>
-                            &nbsp;&nbsp;&nbsp;<label>Choose memebrs</label>
-                          </div>
-                          <br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;<button class="waves-effect waves-light btn modal-close green" type="submit"><i class="material-icons center">send</i></button>
-                            <input type="hidden" name="form_type" value="noti">
-                        </form>
-                        </div>
-                        <div class="modal-footer">
-                        </div>
-                      </div>
+                    <a href="/accounts/edit_event/{{event.id}}/"><i class="material-icons center">edit</i></a>
                 {% endif %}
             </div>
           </div>

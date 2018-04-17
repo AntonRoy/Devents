@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<head>
-    <title>Devent</title>
+<head xmlns="http://www.w3.org/1999/html">
+    <title>Devents</title>
+    <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
-    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
     <nav class="#0277bd light-blue darken-2">
         <div class="nav-wrapper">
-            <div class="brand-logo">&nbsp;&nbsp;&nbsp;DEVENT</div>
+            <div class="brand-logo">&nbsp;&nbsp;&nbsp;Devent</div>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
                 <li><a href="/accounts/profile" class="top">Профиль</a></li>
                 <li><a href="/accounts/sign_up_room" class="top">Создать комнату</a></li>
@@ -15,31 +16,132 @@
             </ul>
         </div>
     </nav>
-    <form method="post">
-        {% csrf_token %}
-        <p>&shy;&nbsp;&nbsp;</p>
-        <div align="center">
-            <div class="input-field col s6">
-              &nbsp;<input id="event_name" name="event_name" type="text" class="validate" value="{{event.name}}">
-              <label for="event_name">Event name</label>
+    <div class="row">
+
+        <form method="POST" id="redact_room">
+            {% csrf_token %}
+        <div class="col s12 m200">
+          <div class="card">
+            <div class="card-content">
+                <label for="event_name">Название события</label>
+                <input id="event_name" name="event_name" type="text" class="validate" value="{{event.name}}">
+                <label for="discription">Описание события</label>
+                <input id="discription" name="discription" type="text" class="validate" value="{{event.cmt}}">
             </div>
-            <div class="input-field col s6">
-              &nbsp;<input id="discription" name="discription" type="text" class="validate" value="{{event.cmt}}">
-              <label for="discription">Discription</label>
-            </div>
-            <div class="input-field col s6">
-              &nbsp<input id="date" type="text" class="datepicker" name="data">
-              <label for="date">Date (previous {{event.date}})</label>
-            </div>
-            <div class="input-field col s6">
-              &nbsp<input id="time" type="text" class="timepicker" name="time">
-              <label for="time">Time</label>
-            </div>
+          </div>
         </div>
-        &nbsp;&nbsp;&nbsp;&nbsp;<input class="waves-effect waves-light btn" type="submit" value="Отредактировать">
+      </div>
+    <table>
+      <tr>
+          <th>
+              <div class="row">
+                <div class="col s12 m210">
+                  <div class="card">
+                    <div class="card-content">
+                        {% if event.is_task %}
+                            <p><font color="#808080" size="2">крайний срок сдачи:</font></p>
+                        {% else %}
+                            <p><font color="#808080" size="2">Дата и время мероприятия:</font></p>
+                        {% endif %}
+                        <a><i class="material-icons">alarm</i><font size="5">{{ event.date }}</font></a>
+                    </div>
+                      <div class="input-field col s6">
+                      &nbsp<input id="date_event" type="text" class="datepicker" name="data">
+                      <label for="date_event">Новая дата</label>
+                      </div>
+                      <div class="input-field col s6">
+                      &nbsp<input id="time_event" type="text" class="timepicker" name="time">
+                      <label for="time_event">Новое время</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                  &nbsp;&nbsp;<button class="btn green" type="submit">Сохранить изменения</button>
+              </div>
+                <input type="hidden" name="form_type" value="edit_room">
+              {% if admin and new_memebers%}
+                <div class="card">
+                    <div class="card-content">
+                        <form method="post" id="add">
+                            {% csrf_token %}
+                            <div class="input-field col s6 m6">
+                                <select multiple name="new_members">
+                                    {% for member in new_members%}
+                                        &nbsp;&nbsp;&nbsp;<option selected="true" value="{{member.id}}">{{member}}</option>
+                                    {%endfor%}
+                                </select>
+                                &nbsp;&nbsp;&nbsp;<label>Добавить пользователей из комнаты</label>
+                              </div>
+                            <input type="submit" class="waves-effect waves-light btn green" value="Добавить"><font color="white">{{error}}</font>
+                            <input type="hidden" name="form_type" value="redact_event">
+                        </form>
+                    </div>
+                </div>
+            {% endif %}
+          </th>
+          </form>
+        <th>
+            <div class="row">
+                <div class="col s20 m12">
+                  <div class="card blue whiten-10">
+                    <div class="card-content white-text">
+                        {% if event.is_task == 0 %}
+                            <span class="card-title">Участники</span>
+                        {% else %}
+                            <span class="card-title">Должники</span>
+                        {% endif %}
+                    </div>
+                    <div class="collection">
+                        {% for member in members%}
+                            <a href="/accounts/member/{{member.id}}" class="collection-item">{{member}}</a>
+                        {% endfor %}
+                      </div>
+                  </div>
+                </div>
+            </div>
+        </th>
+      </tr>
+    </table>
     </form>
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <div align="right">
+    <a href="#delete_modal" class="btn-floating btn-large waves-effect waves-light red  modal-trigger model-open"><i class="material-icons">delete</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+    <div id="delete_modal" class="modal">
+            <form method="post" id="delete_event">
+                {% csrf_token %}
+                <div class="modal-content">
+                    <span>Вы уверены, что хотите удалить событие?</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="waves-effect waves-light green btn modal-close">Нет</button>
+                    <button type="submit" class="waves-effect waves-light red btn modal-close">Да</button>
+                    <input type="hidden" name="form_type" value="delete_event">
+                </div>
+            </form>
+        </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script>
+         $(document).ready(function(){
+                $('.modal').modal();
+          });
+        $('#modal').modal('open');
+        $('#modal').modal('close');
+    </script>
+    <script>
+         $(document).ready(function(){
+                $('.modal').modal();
+          });
+    </script>
+    <script>
+        $(document).ready(function() {
+        $('select').material_select();
+        });
+    </script>
+    <script>
+        $(".dropdown-button").dropdown();
+    </script>
     <script>
         $('.datepicker').pickadate({
             selectMonths: true, // Creates a dropdown to control month
@@ -62,11 +164,6 @@
             ampmclickable: true, // make AM PM clickable
             aftershow: function(){} //Function for after opening timepicker
           });
-    </script>
-    <script>
-        $(document).ready(function() {
-        $('select').material_select();
-        });
     </script>
 </body>
 </html>
