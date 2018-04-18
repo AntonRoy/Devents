@@ -568,6 +568,7 @@ def task(request, task_id):
 
 def edit_event(request, event_id):
     event = Event.objects.get(id=event_id)
+    members = list(event.users.all())
     if request.method == 'POST':
         event.name = request.POST['event_name']
         event.cmt = request.POST['discription']
@@ -585,7 +586,8 @@ def edit_event(request, event_id):
             event.date=date
         event.save()
         return redirect ('/accounts/event/{0}'.format(event_id))
-    return render (request, 'edit_event.html', {'event': event})
+    return render (request, 'edit_event.html', {'event': event,
+                                                'members': members})
 
 
 #ajax:
