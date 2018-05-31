@@ -3,4 +3,4 @@ DEVENT - это web-сервис, который сделает общение �
 Web-приложение
 
 Технологии: 
-Django, Javascript, Ajax, JQuery, Materialize 
+Django, Javascript, Ajax, JQuery, Html, Css, Materialize 
