@@ -32,7 +32,7 @@ SecretStorage==2.3.1
 setproctitle==1.1.10
 shutilwhich==1.1.0
 six==1.10.0
-urllib3==1.22
+urllib3==1.26.5
 virtualenv==15.1.0
 virtualenv-clone==0.2.6
 vk-api==9.3
