@@ -1,7 +1,7 @@
 asn1crypto==0.22.0
 backports.shutil-get-terminal-size==1.0.0
 cajarename==17.3.28
-certifi==2018.1.18
+certifi==2022.12.7
 chardet==3.0.4
 configobj==5.0.6
 configparser==3.5.0
